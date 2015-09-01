@@ -22,7 +22,7 @@ public class Mybatis {
         try {
             properties = new Properties();
             properties.setProperty("driver", "org.postgresql.Driver");
-            properties.setProperty("url", "jdbc:postgresql://127.0.0.1:32771/test_database");
+            properties.setProperty("url", "jdbc:postgresql://127.0.0.1:5432/test_database");
             properties.setProperty("username", "test_user");
             properties.setProperty("password", "1q2w3e");
             factory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("MybatisConfig.xml"),
