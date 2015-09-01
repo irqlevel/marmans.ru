@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="models.mappers.UserMapper">
+    <update id="createTable">
+        CREATE TABLE IF NOT EXISTS Users(uid BIGINT PRIMARY KEY NOT NULL, name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE);
+    </update>
+    <update id="dropTable">
+        DROP TABLE IF EXISTS Users;
+    </update>
+
+    <insert id="insertUser" parameterType="map">
+        INSERT INTO Users (uid, name, email) VALUES(#{uid}, #{name}, #{email});
+    </insert>
+
+    <delete id="deleteUser" parameterType="long">
+        DELETE FROM Users WHERE uid = #{uid};
+    </delete>
+
+    <select id="getUser" parameterType="long" resultType="models.User">
+        SELECT uid as uid, name as name, email as email FROM Users WHERE uid = #{uid};
+    </select>
+
+    <select id="selectAll" resultType="models.User">
+        SELECT * FROM Users;
+    </select>
+</mapper>

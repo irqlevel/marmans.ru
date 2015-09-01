@@ -5,5 +5,10 @@
 # Home page
 GET     /                           controllers.Application.index()
 GET     /factorial/:number          controllers.Application.factorial2(number : Integer)
+GET     /db/sync                    controllers.Application.dbSync()
+GET     /db/drop                    controllers.Application.dbDrop()
+GET     /create/user                controllers.Application.createUser()
+GET     /users                      controllers.Application.users()
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

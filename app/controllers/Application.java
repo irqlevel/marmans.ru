@@ -1,5 +1,8 @@
 package controllers;
 
+import models.Mybatis;
+import models.User;
+import models.Users;
 import play.*;
 import play.libs.F.*;
 import play.mvc.*;
@@ -7,14 +10,41 @@ import play.Logger;
 import views.html.*;
 
 import java.math.BigInteger;
+import java.util.List;
 
 public class Application extends Controller {
 
-    public Result index() {
-        return ok(index.render());
+    private String dbSyncJob() {
+        if (Mybatis.dbSync())
+            return "Success";
+        else
+            return "Failure";
     }
 
-    public String factorialCalc(int number) {
+    public Promise<Result> dbSync() {
+        Logger.info("db sync");
+        Promise<String> promise = Promise.promise(() -> dbSyncJob());
+        return promise.map(val -> ok(dbsync.render(val)));
+    }
+
+    private String dbDropJob() {
+        if (Mybatis.dbDrop())
+            return "Success";
+        else
+            return "Failure";
+    }
+
+    public Promise<Result> dbDrop() {
+        Logger.info("db drop");
+        Promise<String> promise = Promise.promise(() -> dbDropJob());
+        return promise.map(val -> ok(dbdrop.render(val)));
+    }
+
+    public Result index() {
+        return ok(index.render("Hello world!"));
+    }
+
+    private String factorialCalc(int number) {
         Logger.info("calc fac of " + number);
         if (number < 0)
             return "UNDEFINED";
@@ -32,5 +62,15 @@ public class Application extends Controller {
         Logger.info("request to calc fac of " + number);
         Promise<String> promise = Promise.promise(() -> factorialCalc(number));
         return promise.map(val -> ok(factorial.render(number.toString(), val)));
+    }
+
+    public Promise<Result> createUser() {
+        Promise<User> promise = Promise.promise(() -> Users.createUser());
+        return promise.map(user -> ok(createuser.render(user)));
+    }
+
+    public Promise<Result> users() {
+        Promise<List<User>> promise = Promise.promise(() -> Users.getUsers());
+        return promise.map(users -> ok(usersv.render(users)));
     }
 }

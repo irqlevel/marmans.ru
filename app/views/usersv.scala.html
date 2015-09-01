@@ -1,0 +1,10 @@
+@(users: List[models.User])
+@main("Users") {
+<p>This is a list of users!</p>
+
+<ul>
+    @for(user <- users) {
+    <li>@user.getUid() @user.getEmail()</li>
+    }
+</ul>
+}
