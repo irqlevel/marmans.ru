@@ -1,4 +1,10 @@
 @(msg: String)
-@main("Index") {
+
+@scripts = {
+}
+
+@content = {
 <p>This is an index page! Your msg is @msg</p>
 }
+
+@main("Index", scripts, content)

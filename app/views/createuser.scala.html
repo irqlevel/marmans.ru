@@ -1,8 +1,15 @@
-@(user: User)
-@main("CreateUser") {
-<p>This is a create user!</p>
+@(user: models.User)
 
+@scripts = {
+}
+
+@content = {
+<p>This is a create user!</p>
 <p>
     User @user.getUid() created
 </p>
 }
+
+@import java.lang.String; val title="createuser"
+
+@main(title, scripts, content)

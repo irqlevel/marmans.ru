@@ -1,4 +1,12 @@
 @(msg: String)
-@main("DbDrop") {
+
+@scripts = {
+}
+
+@content = {
 <p>Db drop result is @msg</p>
 }
+
+@import java.lang.String; val title="DbDrop"
+
+@main(title, scripts, content)

@@ -1,9 +1,14 @@
 package controllers;
 
+import api.JoinRequest;
+import api.Reply;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.Gson;
 import models.Mybatis;
 import models.User;
 import models.Users;
 import play.*;
+import play.api.mvc.Request;
 import play.libs.F.*;
 import play.mvc.*;
 import play.Logger;
@@ -65,12 +70,54 @@ public class Application extends Controller {
     }
 
     public Promise<Result> createUser() {
+        Logger.info("create user");
         Promise<User> promise = Promise.promise(() -> Users.createUser());
         return promise.map(user -> ok(createuser.render(user)));
     }
 
     public Promise<Result> users() {
+        Logger.info("get users");
         Promise<List<User>> promise = Promise.promise(() -> Users.getUsers());
         return promise.map(users -> ok(usersv.render(users)));
+    }
+
+    public Result signin() {
+        Logger.info("signin");
+        return ok(signinv.render());
+    }
+
+    public Result join() {
+        Logger.info("join");
+        return ok(joinv.render());
+    }
+
+    public Result postJoin() {
+        String json = request().body().asText();
+
+        Logger.info("post join json=" + json);
+        JoinRequest request = new Gson().fromJson(json, JoinRequest.class);
+
+        Logger.info("email=" + request.email + " password=" + request.password);
+
+        Reply reply = new Reply();
+        return ok(new Gson().toJson(reply));
+    }
+
+    public Result postSignin() {
+        Logger.info("post signin");
+
+        String json = request().body().asText();
+        Logger.info("post join json=" + json);
+        JoinRequest request = new Gson().fromJson(json, JoinRequest.class);
+
+        Logger.info("email=" + request.email + " password=" + request.password);
+
+        Reply reply = new Reply();
+        return ok(new Gson().toJson(reply));
+    }
+
+    public Result postSignout() {
+        Logger.info("post signout");
+        return redirect(routes.Application.index());
     }
 }

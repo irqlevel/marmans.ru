@@ -1,5 +1,12 @@
-@(number: String)(result: String)
+@(number: String, result: String)
 
-@main("factorial") {
+@scripts = {
+}
+
+@content = {
 <h3>Factorial of @number is @result</h3>
 }
+
+@import java.lang.String; val title="Factorial"
+
+@main(title, scripts, content)

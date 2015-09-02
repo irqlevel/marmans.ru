@@ -1,4 +1,12 @@
 @(msg: String)
-@main("DbSync") {
+
+@scripts = {
+}
+
+@content = {
 <p>Db sync result is @msg</p>
 }
+
+@import java.lang.String; val title="DbSync"
+
+@main(title, scripts, content)

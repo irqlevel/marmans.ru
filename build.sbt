@@ -11,8 +11,9 @@ libraryDependencies ++= Seq(
   javaWs,
   javaCore,
   javaJdbc,
- "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
- "org.mybatis" % "mybatis" % "3.3.0"
+  "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
+  "org.mybatis" % "mybatis" % "3.3.0",
+  "com.google.code.gson" % "gson" % "2.3.1"
 )
 
 // Add app folder as resource directory so that mapper xml files are in the classpath
