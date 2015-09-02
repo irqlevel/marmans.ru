@@ -3,13 +3,16 @@ package controllers;
 import api.JoinRequest;
 import api.Reply;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
+import lib.BCrypt;
 import models.Mybatis;
 import models.User;
 import models.Users;
 import play.*;
 import play.api.mvc.Request;
 import play.libs.F.*;
+import play.libs.Json;
 import play.mvc.*;
 import play.Logger;
 import views.html.*;
@@ -92,32 +95,90 @@ public class Application extends Controller {
     }
 
     public Result postJoin() {
-        String json = request().body().asText();
+        try {
+            Logger.info("post join");
 
-        Logger.info("post join json=" + json);
-        JoinRequest request = new Gson().fromJson(json, JoinRequest.class);
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                throw new Exception("bad request");
+            String email = json.findPath("email").textValue();
+            String password = json.findPath("password").textValue();
+            if (email == null || password == null)
+                throw new Exception("bad request");
 
-        Logger.info("email=" + request.email + " password=" + request.password);
+            Logger.info("email=" + email + " password=" + password);
 
-        Reply reply = new Reply();
-        return ok(new Gson().toJson(reply));
+            User user = Users.joinUser(email, password);
+            ObjectNode result = Json.newObject();
+            if (user != null) {
+                Logger.info("user created uid=" + user.getUid());
+                result.put("result", "success");
+                result.put("resultCode", 0);
+                result.put("uid", user.getUid());
+            } else {
+                result.put("result", "join failed");
+                result.put("resultCode", 1);
+            }
+            return ok(result);
+        } catch (Exception e) {
+            Logger.error("bad request", e);
+            return badRequest();
+        } finally {
+
+        }
     }
 
     public Result postSignin() {
-        Logger.info("post signin");
+        try {
+            Logger.info("post signin");
 
-        String json = request().body().asText();
-        Logger.info("post join json=" + json);
-        JoinRequest request = new Gson().fromJson(json, JoinRequest.class);
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                throw new Exception("bad request");
+            String email = json.findPath("email").textValue();
+            String password = json.findPath("password").textValue();
+            if (email == null || password == null)
+                throw new Exception("bad request");
 
-        Logger.info("email=" + request.email + " password=" + request.password);
+            Logger.info("email=" + email + " password=" + password);
 
-        Reply reply = new Reply();
-        return ok(new Gson().toJson(reply));
+            User user = Users.getUserByEmail(email);
+            ObjectNode result = Json.newObject();
+            if (user == null) {
+                result.put("result", "signin failed");
+                result.put("resultCode", 1);
+                return ok(result);
+            }
+
+            if (!BCrypt.checkpw(password, user.getHashp())) {
+                result.put("result", "signin failed");
+                result.put("resultCode", 1);
+                return ok(result);
+            }
+
+            Logger.info("user signed in uid=" + user.getUid());
+            result.put("result", "success");
+            result.put("resultCode", 0);
+            result.put("uid", user.getUid());
+            return ok(result);
+        } catch (Exception e) {
+            Logger.error("bad request", e);
+            return badRequest();
+        } finally {
+
+        }
     }
 
     public Result postSignout() {
         Logger.info("post signout");
-        return redirect(routes.Application.index());
+        return badRequest();
+    }
+
+    public Result profile(long uid) {
+        Logger.info("profile uid=" + uid);
+        User user = Users.getUser(uid);
+        if (user == null)
+            return badRequest();
+        return ok(profilev.render(user));
     }
 }

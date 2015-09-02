@@ -13,6 +13,7 @@ public class Global extends GlobalSettings {
     public void onStart(Application app) {
         super.onStart(app);
         Logger.info("on start");
+        Mybatis.dbDrop();
         Mybatis.dbSync();
     }
 

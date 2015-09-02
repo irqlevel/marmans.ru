@@ -4,13 +4,12 @@
 }
 
 @content = {
+<h3>Users</h3>
 <ul>
     @for(user <- users) {
-        <p>@user.getUid()</p>
+        <p>@user.getUid() @user.getEmail()</p>
     }
 </ul>
 }
 
-@import java.lang.String; val title="users"
-
-@main(title, scripts, content)
+@main("Users", scripts, content)

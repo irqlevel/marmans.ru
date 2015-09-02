@@ -5,14 +5,14 @@
 <mapper namespace="models.mappers.UserMapper">
     <update id="createTable">
         CREATE TABLE IF NOT EXISTS Users(uid BIGINT PRIMARY KEY NOT NULL, name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL UNIQUE);
+        email VARCHAR(255) NOT NULL UNIQUE, hashp VARCHAR(255) NOT NULL);
     </update>
     <update id="dropTable">
         DROP TABLE IF EXISTS Users;
     </update>
 
     <insert id="insertUser" parameterType="map">
-        INSERT INTO Users (uid, name, email) VALUES(#{uid}, #{name}, #{email});
+        INSERT INTO Users (uid, name, email, hashp) VALUES(#{uid}, #{name}, #{email}, #{hashp});
     </insert>
 
     <delete id="deleteUser" parameterType="long">
@@ -20,7 +20,11 @@
     </delete>
 
     <select id="getUser" parameterType="long" resultType="models.User">
-        SELECT uid as uid, name as name, email as email FROM Users WHERE uid = #{uid};
+        SELECT * FROM Users WHERE uid = #{uid};
+    </select>
+
+    <select id="getUserByEmail" parameterType="String" resultType="models.User">
+        SELECT * FROM Users WHERE email = #{email};
     </select>
 
     <select id="selectAll" resultType="models.User">

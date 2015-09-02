@@ -1,0 +1,10 @@
+@(user: models.User)
+
+@scripts = {
+}
+
+@content = {
+<h3>Profile @user.getEmail()</h3>
+}
+
+@main("Profile", scripts, content)
