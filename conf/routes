@@ -4,10 +4,6 @@
 
 # Home page
 GET     /                           controllers.Application.index()
-GET     /factorial/:number          controllers.Application.factorial2(number : Integer)
-GET     /db/sync                    controllers.Application.dbSync()
-GET     /db/drop                    controllers.Application.dbDrop()
-GET     /create/user                controllers.Application.createUser()
 GET     /users                      controllers.Application.users()
 GET     /join                       controllers.Application.join()
 GET     /signin                     controllers.Application.signin()

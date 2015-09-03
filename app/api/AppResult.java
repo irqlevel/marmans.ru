@@ -6,6 +6,7 @@ import play.libs.Json;
 public class AppResult {
     public String resultDesc = "UNDEFINED";
     public int resultCode = -1;
+    public long uid = -1;
 
     public static AppResult success() {
         AppResult result = new AppResult();
@@ -28,10 +29,11 @@ public class AppResult {
         return result;
     }
 
-    public String toJson() {
-        ObjectNode objNode = Json.newObject();
-        objNode.put("resultDesc", resultDesc);
-        objNode.put("resultCode", resultCode);
-        return objNode.toString();
+    public ObjectNode toJson() {
+        ObjectNode json = Json.newObject();
+        json.put("resultDesc", resultDesc);
+        json.put("resultCode", resultCode);
+        json.put("uid", uid);
+        return json;
     }
 }
