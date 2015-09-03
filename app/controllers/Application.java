@@ -1,16 +1,11 @@
 package controllers;
 
-import api.JoinRequest;
-import api.Reply;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.Gson;
 import lib.BCrypt;
-import models.Mybatis;
-import models.User;
-import models.Users;
-import play.*;
-import play.api.mvc.Request;
+
+import models.*;
+
 import play.libs.F.*;
 import play.libs.Json;
 import play.mvc.*;
@@ -74,13 +69,13 @@ public class Application extends Controller {
 
     public Promise<Result> createUser() {
         Logger.info("create user");
-        Promise<User> promise = Promise.promise(() -> Users.createUser());
+        Promise<User> promise = Promise.promise(() -> Users.create());
         return promise.map(user -> ok(createuser.render(user)));
     }
 
     public Promise<Result> users() {
         Logger.info("get users");
-        Promise<List<User>> promise = Promise.promise(() -> Users.getUsers());
+        Promise<List<User>> promise = Promise.promise(() -> Users.getAll());
         return promise.map(users -> ok(usersv.render(users)));
     }
 
@@ -108,7 +103,7 @@ public class Application extends Controller {
 
             Logger.info("email=" + email + " password=" + password);
 
-            User user = Users.joinUser(email, password);
+            User user = Users.join(email, password);
             ObjectNode result = Json.newObject();
             if (user != null) {
                 Logger.info("user created uid=" + user.getUid());
@@ -142,7 +137,7 @@ public class Application extends Controller {
 
             Logger.info("email=" + email + " password=" + password);
 
-            User user = Users.getUserByEmail(email);
+            User user = Users.getByEmail(email);
             ObjectNode result = Json.newObject();
             if (user == null) {
                 result.put("result", "signin failed");
@@ -155,6 +150,14 @@ public class Application extends Controller {
                 result.put("resultCode", 1);
                 return ok(result);
             }
+
+            UserSession session = UserSession.genSession(user.getUid(), 3600 * 1000);
+            if (!UserSessions.insert(session)) {
+                result.put("result", "signin failed");
+                result.put("resultCode", 1);
+                return ok(result);
+            }
+            session().put("usersession", session.getValue());
 
             Logger.info("user signed in uid=" + user.getUid());
             result.put("result", "success");
@@ -170,15 +173,54 @@ public class Application extends Controller {
     }
 
     public Result postSignout() {
-        Logger.info("post signout");
-        return badRequest();
+        Logger.info("post signout session=" + session().get("usersession"));
+        String value = session().get("usersession");
+        session().remove("usersession");
+
+        UserSession session = UserSessions.get(value);
+        if (session != null) {
+            if (session.getExpires() > System.currentTimeMillis()) {
+                UserSessions.deleteByUid(session.getUid());
+            } else {
+                UserSessions.delete(session.getValue());
+            }
+        }
+
+        ObjectNode result = Json.newObject();
+        result.put("result", "success");
+        result.put("resultCode", 0);
+        return ok(result);
+    }
+
+    public User authUser() {
+        String value = session().get("usersession");
+        if (value == null)
+            return null;
+        UserSession session = UserSessions.get(value);
+        if (session == null)
+            return null;
+        if (session.getExpires() <= System.currentTimeMillis())
+            return null;
+        User user = Users.get(session.getUid());
+        if (user != null) {
+            Logger.info("auth user uid=" + user.getUid() + " email=" + user.getEmail());
+        }
+        return user;
     }
 
     public Result profile(long uid) {
         Logger.info("profile uid=" + uid);
-        User user = Users.getUser(uid);
+        User user = Users.get(uid);
         if (user == null)
             return badRequest();
+        return ok(profilev.render(user));
+    }
+
+    public Result currentProfile() {
+        Logger.info("profile");
+        User user = authUser();
+        if (user == null)
+            return redirect(controllers.routes.Application.signin());
         return ok(profilev.render(user));
     }
 }

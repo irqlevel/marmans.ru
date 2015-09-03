@@ -16,6 +16,6 @@
     </environments>
     <mappers>
         <mapper resource="UserMapper.xml"/>
-        <mapper resource="SessionMapper.xml"/>
+        <mapper resource="UserSessionMapper.xml"/>
     </mappers>
 </configuration>

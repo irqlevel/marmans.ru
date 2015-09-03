@@ -1,7 +1,7 @@
 package models;
 
-import models.mappers.SessionMapper;
 import models.mappers.UserMapper;
+import models.mappers.UserSessionMapper;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -44,10 +44,10 @@ public class Mybatis {
             session = getFactory().openSession(false);
 
             UserMapper userMapper = session.getMapper(UserMapper.class);
-            SessionMapper sessionMapper = session.getMapper(SessionMapper.class);
+            UserSessionMapper userSessionMapper = session.getMapper(UserSessionMapper.class);
 
             userMapper.createTable();
-            sessionMapper.createTable();
+            userSessionMapper.createTable();
 
             session.commit();
             Logger.info("db synced");
@@ -67,10 +67,10 @@ public class Mybatis {
             session = getFactory().openSession(false);
 
             UserMapper userMapper = session.getMapper(UserMapper.class);
-            SessionMapper sessionMapper = session.getMapper(SessionMapper.class);
+            UserSessionMapper userSessionMapper = session.getMapper(UserSessionMapper.class);
 
             userMapper.dropTable();
-            sessionMapper.dropTable();
+            userSessionMapper.dropTable();
 
             session.commit();
             Logger.info("db dropped");

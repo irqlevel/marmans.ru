@@ -18,7 +18,7 @@ public class Users {
         return Base64.getEncoder().encodeToString(rndBytes);
     }
 
-    public static User joinUser(String email, String password) {
+    public static User join(String email, String password) {
         SqlSession session = null;
 
         User newUser = new User(), user = null;
@@ -30,7 +30,7 @@ public class Users {
         try {
             session = Mybatis.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
-            mapper.insertUser(newUser.getUid(), newUser.getName(), newUser.getEmail(), newUser.getHashp());
+            mapper.insert(newUser.getUid(), newUser.getName(), newUser.getEmail(), newUser.getHashp());
             session.commit();
             user = newUser;
         } finally {
@@ -42,13 +42,13 @@ public class Users {
 
     }
 
-    public static User getUserByEmail(String email) {
+    public static User getByEmail(String email) {
         SqlSession session = null;
         User user = null;
         try {
             session = Mybatis.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
-            user = mapper.getUserByEmail(email);
+            user = mapper.getByEmail(email);
         } finally {
             if (session != null)
                 session.close();
@@ -57,13 +57,13 @@ public class Users {
         return user;
     }
 
-    public static User getUser(long uid) {
+    public static User get(long uid) {
         SqlSession session = null;
         User user = null;
         try {
             session = Mybatis.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
-            user = mapper.getUser(uid);
+            user = mapper.get(uid);
         } finally {
             if (session != null)
                 session.close();
@@ -72,7 +72,7 @@ public class Users {
         return user;
     }
 
-    public static User createUser() {
+    public static User create() {
         SqlSession session = null;
 
         User user = null;
@@ -84,7 +84,7 @@ public class Users {
         try {
             session = Mybatis.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
-            mapper.insertUser(newUser.getUid(), newUser.getName(), newUser.getEmail(), genRndString());
+            mapper.insert(newUser.getUid(), newUser.getName(), newUser.getEmail(), genRndString());
             session.commit();
             user = newUser;
         } finally {
@@ -95,14 +95,14 @@ public class Users {
         return user;
     }
 
-    public static List<User> getUsers() {
+    public static List<User> getAll() {
         SqlSession session = null;
         List<User> users = null;
 
         try {
             session = Mybatis.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
-            users = mapper.selectAll();
+            users = mapper.getAll();
         } finally {
             if (session != null)
                 session.close();

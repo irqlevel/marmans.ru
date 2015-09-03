@@ -9,11 +9,11 @@ public interface UserMapper {
     public void createTable();
     public void dropTable();
 
-    public void insertUser(@Param("uid") Long uid, @Param("name") String name,
+    public void insert(@Param("uid") Long uid, @Param("name") String name,
                            @Param("email") String email, @Param("hashp") String hashp);
-    public User getUser(Long uid);
-    public User getUserByEmail(String email);
-    public void deleteUser(Long uid);
+    public User get(Long uid);
+    public User getByEmail(String email);
+    public void delete(Long uid);
 
-    public List<User> selectAll();
+    public List<User> getAll();
 }

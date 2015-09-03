@@ -19,10 +19,10 @@ function onReady()
                 if (result.resultCode) {
                     showSigninError(result.result);
                 } else {
-                    window.location.replace("/profile/" + result.uid);
+                    window.location.replace("/profile");
                 }
             }).fail(function() {
-                showJoinError("HTTP request failed");
+                showSigninError("HTTP request failed");
             });
     });
 }

@@ -3,18 +3,16 @@ package models;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-public class Session {
+public class UserSession {
     private static final String TAG = "Session";
-    private String session = null;
+    private String value = null;
     private long uid = -1;
     private long expires = -1;
 
-    public String getSession() {
-        return session;
-    }
+    public String getValue() {return value;}
 
-    public void setSession(String session) {
-        this.session = session;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public long getUid() {
@@ -33,10 +31,19 @@ public class Session {
         this.expires = expires;
     }
 
-    public String genSession() {
+    private static String genValue() {
         SecureRandom rng = new SecureRandom();
         byte[] rndBytes = new byte[16];
         rng.nextBytes(rndBytes);
         return Base64.getEncoder().encodeToString(rndBytes);
+    }
+
+    public static UserSession genSession(long uid, long expires) {
+        UserSession session = new UserSession();
+
+        session.setExpires(System.currentTimeMillis() + expires);
+        session.setUid(uid);
+        session.setValue(genValue());
+        return session;
     }
 }

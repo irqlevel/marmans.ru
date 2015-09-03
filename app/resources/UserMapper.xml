@@ -11,23 +11,23 @@
         DROP TABLE IF EXISTS Users;
     </update>
 
-    <insert id="insertUser" parameterType="map">
+    <insert id="insert" parameterType="map">
         INSERT INTO Users (uid, name, email, hashp) VALUES(#{uid}, #{name}, #{email}, #{hashp});
     </insert>
 
-    <delete id="deleteUser" parameterType="long">
+    <delete id="delete" parameterType="long">
         DELETE FROM Users WHERE uid = #{uid};
     </delete>
 
-    <select id="getUser" parameterType="long" resultType="models.User">
+    <select id="get" parameterType="long" resultType="models.User">
         SELECT * FROM Users WHERE uid = #{uid};
     </select>
 
-    <select id="getUserByEmail" parameterType="String" resultType="models.User">
+    <select id="getByEmail" parameterType="String" resultType="models.User">
         SELECT * FROM Users WHERE email = #{email};
     </select>
 
-    <select id="selectAll" resultType="models.User">
+    <select id="getAll" resultType="models.User">
         SELECT * FROM Users;
     </select>
 </mapper>
