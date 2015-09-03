@@ -13,7 +13,7 @@ function onReady()
         postJson("/join", JSON.stringify({ "email": $('#inputEmail').val(), "password" : $('#inputPassword').val() }))
         .done(function(result) {
             if (result.resultCode) {
-                showJoinError(result.result);
+                showJoinError(result.resultDesc);
             } else {
                 window.location.replace("/signin");
             }

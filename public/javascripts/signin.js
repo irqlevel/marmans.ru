@@ -13,7 +13,7 @@ function onReady()
         postJson("/signin", JSON.stringify({ "email": $('#inputEmail').val(), "password" : $('#inputPassword').val() }))
         .done(function(result) {
             if (result.resultCode) {
-                showSigninError(result.result);
+                showSigninError(result.resultDesc);
             } else {
                 window.location.replace("/profile");
             }

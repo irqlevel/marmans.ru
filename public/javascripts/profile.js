@@ -13,7 +13,7 @@ function onReady()
         postJson("/profile", JSON.stringify({"name": $('#inputName').val()}))
         .done(function(result) {
             if (result.resultCode) {
-                showProfileError(result.result);
+                showProfileError(result.resultDesc);
             } else {
                 window.location.replace("/profile");
             }
