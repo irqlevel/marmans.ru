@@ -1,15 +1,28 @@
-@(users: List[models.User])
+@(currUser: models.User, csrfToken: String, users: List[models.User])
 
 @scripts = {
 }
 
 @content = {
-<h3>Users</h3>
-<ul>
-    @for(user <- users) {
-        <p>@user.getUid() @user.getEmail()</p>
-    }
-</ul>
+<table class="table table-condensed">
+    <caption>Users</caption>
+    <thead>
+        <tr align="left">
+            <th>Uid</th>
+            <th>Email</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(user <- users) {
+        <tr align="left">
+            <td>@user.getUid()</td>
+            <td>@user.getEmail()</td>
+            <td>@user.getName()</td>
+        </tr>
+        }
+    </tbody>
+</table>
 }
 
-@main("Users", scripts, content)
+@main(currUser, csrfToken, "Users", scripts, content)

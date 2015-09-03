@@ -11,6 +11,10 @@
         DROP TABLE IF EXISTS Users;
     </update>
 
+    <update id="updateName" parameterType="map">
+        UPDATE Users SET name = #{name} WHERE uid = #{uid};
+    </update>
+
     <insert id="insert" parameterType="map">
         INSERT INTO Users (uid, name, email, hashp) VALUES(#{uid}, #{name}, #{email}, #{hashp});
     </insert>

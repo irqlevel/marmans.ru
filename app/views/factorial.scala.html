@@ -1,4 +1,4 @@
-@(number: String, result: String)
+@(currUser: models.User, csrfToken: String, number: String, result: String)
 
 @scripts = {
 }
@@ -9,4 +9,4 @@
 
 @import java.lang.String; val title="Factorial"
 
-@main(title, scripts, content)
+@main(currUser, csrfToken, title, scripts, content)

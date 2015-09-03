@@ -1,4 +1,4 @@
-@(user: models.User)
+@(currUser: models.User, csrfToken: String, user: models.User)
 
 @scripts = {
 }
@@ -12,4 +12,4 @@
 
 @import java.lang.String; val title="createuser"
 
-@main(title, scripts, content)
+@main(currUser, csrfToken, title, scripts, content)

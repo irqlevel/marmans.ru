@@ -1,4 +1,4 @@
-@(msg: String)
+@(currUser: models.User, csrfToken: String, msg: String)
 
 @scripts = {
 }
@@ -7,4 +7,4 @@
 <p>This is an index page! Your msg is @msg</p>
 }
 
-@main("Index", scripts, content)
+@main(currUser, csrfToken, "Index", scripts, content)

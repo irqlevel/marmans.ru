@@ -9,21 +9,18 @@ function onReady()
     $("#join-form" ).submit(function( event ) {
         $("#join-error").hide();
         event.preventDefault();
-        $.ajax({
-            method: "POST",
-            url: "/join",
-            data: JSON.stringify({ "email": $('#inputEmail').val(), "password" : $('#inputPassword').val() }),
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            }).done(function(result) {
-                if (result.resultCode) {
-                    showJoinError(result.result);
-                } else {
-                    window.location.replace("/signin");
-                }
-            }).fail(function() {
-                showJoinError("HTTP request failed");
-            });
+
+        postJson("/join", JSON.stringify({ "email": $('#inputEmail').val(), "password" : $('#inputPassword').val() }))
+        .done(function(result) {
+            if (result.resultCode) {
+                showJoinError(result.result);
+            } else {
+                window.location.replace("/signin");
+            }
+        })
+        .fail(function() {
+            showJoinError("HTTP request failed");
+        });
     });
 }
 $(document).ready(onReady);

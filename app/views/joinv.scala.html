@@ -1,3 +1,4 @@
+@(currUser: models.User, csrfToken: String)
 @content = {
 <form class="form-signin" id="join-form">
     <h2 class="form-signin-heading">Please join</h2>
@@ -18,4 +19,4 @@
 <script src="@routes.Assets.versioned("javascripts/join.js")" type="text/javascript"></script>
 }
 
-@main("Join", scripts, content)
+@main(currUser, csrfToken, "Join", scripts, content)

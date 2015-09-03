@@ -1,4 +1,4 @@
-@(msg: String)
+@(currUser: models.User, csrfToken: String, msg: String)
 
 @scripts = {
 }
@@ -9,4 +9,4 @@
 
 @import java.lang.String; val title="DbDrop"
 
-@main(title, scripts, content)
+@main(currUser, csrfToken, title, scripts, content)

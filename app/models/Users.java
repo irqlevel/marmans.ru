@@ -42,6 +42,22 @@ public class Users {
 
     }
 
+    public static boolean updateName(long uid, String name) {
+        SqlSession session = null;
+        boolean result = false;
+        try {
+            session = Mybatis.getSession();
+            UserMapper mapper = session.getMapper(UserMapper.class);
+            mapper.updateName(uid, name);
+            session.commit();
+            result = true;
+        } finally {
+            if (session != null)
+                session.close();
+        }
+        return result;
+    }
+
     public static User getByEmail(String email) {
         SqlSession session = null;
         User user = null;

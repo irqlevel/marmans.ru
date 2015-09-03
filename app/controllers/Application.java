@@ -27,7 +27,7 @@ public class Application extends Controller {
     public Promise<Result> dbSync() {
         Logger.info("db sync");
         Promise<String> promise = Promise.promise(() -> dbSyncJob());
-        return promise.map(val -> ok(dbsync.render(val)));
+        return promise.map(val -> ok(dbsync.render(currUser(), currCsrfToken(), val)));
     }
 
     private String dbDropJob() {
@@ -40,11 +40,11 @@ public class Application extends Controller {
     public Promise<Result> dbDrop() {
         Logger.info("db drop");
         Promise<String> promise = Promise.promise(() -> dbDropJob());
-        return promise.map(val -> ok(dbdrop.render(val)));
+        return promise.map(val -> ok(dbdrop.render(currUser(), currCsrfToken(), val)));
     }
 
     public Result index() {
-        return ok(index.render("Hello world!"));
+        return ok(index.render(currUser(), currCsrfToken(), "Hello world!"));
     }
 
     private String factorialCalc(int number) {
@@ -64,29 +64,29 @@ public class Application extends Controller {
     public Promise<Result> factorial2(final Integer number) {
         Logger.info("request to calc fac of " + number);
         Promise<String> promise = Promise.promise(() -> factorialCalc(number));
-        return promise.map(val -> ok(factorial.render(number.toString(), val)));
+        return promise.map(val -> ok(factorial.render(currUser(), currCsrfToken(), number.toString(), val)));
     }
 
     public Promise<Result> createUser() {
         Logger.info("create user");
         Promise<User> promise = Promise.promise(() -> Users.create());
-        return promise.map(user -> ok(createuser.render(user)));
+        return promise.map(user -> ok(createuser.render(currUser(), currCsrfToken(), user)));
     }
 
     public Promise<Result> users() {
         Logger.info("get users");
         Promise<List<User>> promise = Promise.promise(() -> Users.getAll());
-        return promise.map(users -> ok(usersv.render(users)));
+        return promise.map(users -> ok(usersv.render(currUser(), currCsrfToken(), users)));
     }
 
     public Result signin() {
         Logger.info("signin");
-        return ok(signinv.render());
+        return ok(signinv.render(currUser(), currCsrfToken()));
     }
 
     public Result join() {
         Logger.info("join");
-        return ok(joinv.render());
+        return ok(joinv.render(currUser(), currCsrfToken()));
     }
 
     public Result postJoin() {
@@ -126,7 +126,7 @@ public class Application extends Controller {
     public Result postSignin() {
         try {
             Logger.info("post signin");
-
+            signout();
             JsonNode json = request().body().asJson();
             if (json == null)
                 throw new Exception("bad request");
@@ -172,8 +172,7 @@ public class Application extends Controller {
         }
     }
 
-    public Result postSignout() {
-        Logger.info("post signout session=" + session().get("usersession"));
+    private void signout() {
         String value = session().get("usersession");
         session().remove("usersession");
 
@@ -185,14 +184,30 @@ public class Application extends Controller {
                 UserSessions.delete(session.getValue());
             }
         }
+    }
 
+    public Result postSignout() {
+        Logger.info("post signout session=" + session().get("usersession"));
+        signout();
         ObjectNode result = Json.newObject();
         result.put("result", "success");
         result.put("resultCode", 0);
         return ok(result);
     }
 
-    public User authUser() {
+    private String currCsrfToken() {
+        String value = session().get("usersession");
+        if (value == null)
+            return null;
+        UserSession session = UserSessions.get(value);
+        if (session == null)
+            return null;
+        if (session.getExpires() <= System.currentTimeMillis())
+            return null;
+        return session.getCsrfToken();
+    }
+
+    private User currUser() {
         String value = session().get("usersession");
         if (value == null)
             return null;
@@ -213,14 +228,52 @@ public class Application extends Controller {
         User user = Users.get(uid);
         if (user == null)
             return badRequest();
-        return ok(profilev.render(user));
+        return ok(profilev.render(currUser(), currCsrfToken(), user));
+    }
+
+    public Result postProfile() {
+        try {
+            String csrfToken = request().getHeader("X-Csrf-Token");
+            Logger.info("post profile csrfToken=" + csrfToken);
+
+            JsonNode json = request().body().asJson();
+            if (json == null)
+                throw new Exception("bad request");
+            String name = json.findPath("name").textValue();
+            if (name == null)
+                throw new Exception("bad request");
+
+            Logger.info("name=" + name);
+
+            User user = currUser();
+            if (user == null)
+                throw new Exception("bad request");
+            if (!csrfToken.equals(currCsrfToken()))
+                throw new Exception("bad request");
+
+            ObjectNode result = Json.newObject();
+            if (!Users.updateName(user.getUid(), name)) {
+                result.put("result", "update failed");
+                result.put("resultCode", 1);
+            } else {
+                result.put("result", "success");
+                result.put("resultCode", 0);
+            }
+
+            return ok(result);
+        } catch (Exception e) {
+            Logger.error("bad request", e);
+            return badRequest();
+        } finally {
+
+        }
     }
 
     public Result currentProfile() {
         Logger.info("profile");
-        User user = authUser();
+        User user = currUser();
         if (user == null)
             return redirect(controllers.routes.Application.signin());
-        return ok(profilev.render(user));
+        return ok(profilev.render(currUser(), currCsrfToken(), user));
     }
 }

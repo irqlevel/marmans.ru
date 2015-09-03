@@ -6,8 +6,15 @@ import java.util.Base64;
 public class UserSession {
     private static final String TAG = "Session";
     private String value = null;
+    private String csrfToken = null;
     private long uid = -1;
     private long expires = -1;
+
+    public String getCsrfToken() {return csrfToken;}
+
+    public void setCsrfToken(String csrfToken) {
+        this.csrfToken = csrfToken;
+    }
 
     public String getValue() {return value;}
 
@@ -31,9 +38,9 @@ public class UserSession {
         this.expires = expires;
     }
 
-    private static String genValue() {
+    private static String genBase64String(int bytes) {
         SecureRandom rng = new SecureRandom();
-        byte[] rndBytes = new byte[16];
+        byte[] rndBytes = new byte[bytes];
         rng.nextBytes(rndBytes);
         return Base64.getEncoder().encodeToString(rndBytes);
     }
@@ -43,7 +50,8 @@ public class UserSession {
 
         session.setExpires(System.currentTimeMillis() + expires);
         session.setUid(uid);
-        session.setValue(genValue());
+        session.setValue(genBase64String(16));
+        session.setCsrfToken(genBase64String(16));
         return session;
     }
 }

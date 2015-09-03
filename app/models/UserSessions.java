@@ -14,7 +14,7 @@ public class UserSessions {
         try {
             sql = Mybatis.getSession();
             UserSessionMapper mapper = sql.getMapper(UserSessionMapper.class);
-            mapper.insert(session.getValue(), session.getUid(), session.getExpires());
+            mapper.insert(session.getValue(), session.getCsrfToken(), session.getUid(), session.getExpires());
             sql.commit();
             result = true;
         } finally {
