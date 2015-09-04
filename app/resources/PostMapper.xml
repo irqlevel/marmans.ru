@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="models.mappers.PostMapper">
+    <update id="createTable">
+        CREATE TABLE IF NOT EXISTS Posts(postId BIGINT PRIMARY KEY NOT NULL, uid BIGINT, title VARCHAR(255) NOT NULL,
+        content TEXT NOT NULL, creationTime BIGINT);
+    </update>
+    <update id="dropTable">
+        DROP TABLE IF EXISTS Posts;
+    </update>
+
+    <insert id="insert" parameterType="map">
+        INSERT INTO Posts (postId, uid, title, content, creationTime)
+        VALUES(#{postId}, #{uid}, #{title}, #{content}, #{creationTime});
+    </insert>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM Posts WHERE postId = #{postId};
+    </delete>
+
+    <select id="get" parameterType="long" resultType="models.Post">
+        SELECT * FROM Posts WHERE postId = #{postId};
+    </select>
+
+    <select id="getUserAll" parameterType="long" resultType="models.Post">
+        SELECT * FROM Posts WHERE uid = #{uid};
+    </select>
+
+    <select id="getAll" resultType="models.Post">
+        SELECT * FROM Posts;
+    </select>
+</mapper>

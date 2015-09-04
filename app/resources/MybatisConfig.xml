@@ -17,5 +17,6 @@
     <mappers>
         <mapper resource="UserMapper.xml"/>
         <mapper resource="UserSessionMapper.xml"/>
+        <mapper resource="PostMapper.xml"/>
     </mappers>
 </configuration>

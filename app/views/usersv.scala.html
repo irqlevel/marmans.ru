@@ -5,8 +5,7 @@
 
 @content = {
 <table class="table table-condensed">
-    <caption>Users</caption>
-    <thead>
+     <thead>
         <tr align="left">
             <th>Uid</th>
             <th>Email</th>
@@ -16,7 +15,7 @@
     <tbody>
         @for(user <- users) {
         <tr align="left">
-            <td>@user.getUid()</td>
+            <td><a href="/profile/@user.getUid()">@user.getUid()</a></td>
             <td>@user.getEmail()</td>
             <td>@user.getName()</td>
         </tr>

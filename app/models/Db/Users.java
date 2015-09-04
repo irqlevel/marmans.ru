@@ -1,7 +1,9 @@
-package models;
+package models.Db;
 
 import lib.BCrypt;
 import lib.Rng;
+import models.Db.Db;
+import models.User;
 import models.mappers.UserMapper;
 import org.apache.ibatis.session.SqlSession;
 

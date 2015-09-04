@@ -8,3 +8,30 @@ body {
 .error-text {
     color: #D8000C;
 }
+.post-title {
+    text-align:left;
+}
+.post-content {
+    text-align:left;
+}
+.post-link {
+    text-align:left;
+}
+.post-container {
+}
+
+#post-create-form {
+    text-align:left;
+}
+
+#join-form {
+    text-align:left;
+}
+
+#signin-form {
+    text-align:left;
+}
+
+#profile-container {
+    text-align:left;
+}

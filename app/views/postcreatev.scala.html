@@ -1,0 +1,26 @@
+@(userAuth: models.UserAuth)
+@content = {
+
+@if(userAuth.user != null) {
+    <form id="post-create-form">
+        <div class="form-group">
+            <label for="inputTitle">Title</label>
+            <input type="text" class="form-control" id="inputTitle" placeholder="Title">
+        </div>
+        <div class="form-group">
+            <label for="inputContent">Content</label>
+            <textarea type="text" class="form-control" id="inputContent" placeholder="Content"></textarea>
+        </div>
+        <button type="submit" class="btn btn-default">Post</button>
+    </form>
+    <div id="post-create-error">
+        <p class="error-text" id="post-create-error-text"></p>
+    </div>
+}
+}
+
+@scripts = {
+<script src="@routes.Assets.versioned("javascripts/post_create.js")" type="text/javascript"></script>
+}
+
+@main(userAuth, "Post", scripts, content)

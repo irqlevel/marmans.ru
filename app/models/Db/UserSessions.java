@@ -1,5 +1,7 @@
-package models;
+package models.Db;
 
+import models.Db.Db;
+import models.UserSession;
 import models.mappers.UserSessionMapper;
 import org.apache.ibatis.session.SqlSession;
 

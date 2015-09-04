@@ -4,14 +4,24 @@
 
 # Home page
 GET     /                           controllers.Application.index()
+
 GET     /users                      controllers.Application.users()
+
 GET     /join                       controllers.Application.join()
-GET     /signin                     controllers.Application.signin()
 POST    /join                       controllers.Application.postJoin()
+
+GET     /signin                     controllers.Application.signin()
 POST    /signin                     controllers.Application.postSignin()
 POST    /signout                    controllers.Application.postSignout()
+
 GET     /profile/:uid               controllers.Application.profile(uid : Long)
 GET     /profile                    controllers.Application.currentProfile()
 POST    /profile                    controllers.Application.postProfile()
+
+GET     /post/create                controllers.Application.postCreate()
+POST    /post/create                controllers.Application.postPost()
+GET     /post/:postId               controllers.Application.post(postId: Long)
+GET     /posts                      controllers.Application.posts()
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

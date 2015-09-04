@@ -1,9 +1,10 @@
 package controllers;
 
-import models.User;
+
+import models.Post;
 import models.UserAuth;
 
-class ProfileResult {
+public class PostResult {
+    public Post post;
     public UserAuth userAuth;
-    public User user;
 }

@@ -7,6 +7,7 @@ public class AppResult {
     public String resultDesc = "UNDEFINED";
     public int resultCode = -1;
     public long uid = -1;
+    public long id = -1;
 
     public static AppResult success() {
         AppResult result = new AppResult();
@@ -34,6 +35,7 @@ public class AppResult {
         json.put("resultDesc", resultDesc);
         json.put("resultCode", resultCode);
         json.put("uid", uid);
+        json.put("id", id);
         return json;
     }
 }

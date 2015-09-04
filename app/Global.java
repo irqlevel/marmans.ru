@@ -1,5 +1,5 @@
-import models.Db;
-import models.UserSessions;
+import models.Db.Db;
+import models.Db.UserSessions;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;

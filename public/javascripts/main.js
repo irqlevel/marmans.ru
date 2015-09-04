@@ -1,6 +1,10 @@
 var csrfToken = "";
 var currUserUid = -1;
 
+String.prototype.replaceAll = function(search, replace){
+  return this.split(search).join(replace);
+}
+
 function postJson(url, json)
 {
         return $.ajax({

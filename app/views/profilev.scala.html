@@ -1,7 +1,8 @@
 @(userAuth: models.UserAuth, user: models.User)
 
 @content = {
-    <h3>Profile @user.getUid() email @user.getEmail() name @user.getName()</h3>
+    <div id="profile-container">
+    <h3>uid @user.getUid() email @user.getEmail() name @user.getName()</h3>
 
     @if((userAuth.user != null) && (userAuth.user.getUid() == user.getUid())) {
         <form id="profile-form">
@@ -15,6 +16,7 @@
             <p class="error-text" id="profile-error-text"></p>
         </div>
     }
+    </div>
 }
 
 @scripts = {
