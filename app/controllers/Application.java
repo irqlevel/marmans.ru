@@ -12,6 +12,7 @@ import models.Db.Users;
 import play.libs.F.*;
 import play.mvc.*;
 import play.Logger;
+import scala.App;
 import views.html.*;
 
 public class Application extends Controller {
@@ -51,20 +52,22 @@ public class Application extends Controller {
         try {
             Logger.info("post join job");
             if (join.email == null || join.password == null)
-                throw new Exception("bad request");
+                throw new AppException(AppResult.EINVAL);
 
             Logger.info("email=" + join.email + " password=" + join.password);
 
             User user = Users.join(join.email, join.password);
-            if (user == null) {
-                return AppResult.error(1, "join failed");
-            }
+            if (user == null)
+                throw new AppException(AppResult.EDB_UPDATE);
+
             AppResult result = AppResult.success();
             result.uid = user.getUid();
             return result;
+        } catch (AppException e) {
+            return e.getResult();
         } catch (Exception e) {
-            Logger.error("bad request", e);
-            return AppResult.error(1, "join failed");
+            Logger.error("exception", e);
+            return AppResult.error(AppResult.EEXCEPT);
         } finally {
         }
     }
@@ -78,7 +81,7 @@ public class Application extends Controller {
         Logger.info("post join");
         JsonNode json = request().body().asJson();
         if (json == null) {
-            return appResultToPromise(AppResult.error(1, "invalid data"));
+            return appResultToPromise(AppResult.error(AppResult.EINVAL));
         }
         AppUserJoin join = AppUserJoin.parseJson(json);
         Promise<AppResult> promise = Promise.promise(() -> postJoinJob(join));
@@ -89,34 +92,34 @@ public class Application extends Controller {
         try {
             Logger.info("post signin job");
             if (signin.email == null || signin.password == null)
-                throw new Exception("bad request");
+                throw new AppException(AppResult.EINVAL);
 
             Logger.info("email=" + signin.email + " password=" + signin.password);
 
             User user = Users.getByEmail(signin.email);
-            if (user == null) {
-                return AppResult.error(1, "signin failed");
-            }
+            if (user == null)
+                throw new AppException(AppResult.ENOTFOUND);
 
-            if (!BCrypt.checkpw(signin.password, user.getHashp())) {
-                return AppResult.error(1, "signin failed");
-            }
+            if (!BCrypt.checkpw(signin.password, user.getHashp()))
+                throw new AppException(AppResult.EAUTH);
 
             if (postUserAuth() != null)
                 signout();
             UserSession session = UserSession.genSession(user.getUid(), 24*3600*1000);
-            if (!UserSessions.insert(session)) {
-                return AppResult.error(1, "signin failed");
-            }
+            if (!UserSessions.insert(session))
+                throw new AppException(AppResult.EDB_UPDATE);
+
             session().put("usersession", session.getValue());
 
             Logger.info("user signed in uid=" + user.getUid());
             AppResult result = AppResult.success();
             result.uid = user.getUid();
             return result;
+        } catch (AppException e) {
+            return e.getResult();
         } catch (Exception e) {
-            Logger.error("bad request", e);
-            return AppResult.error(1, "signin failed");
+            Logger.error("exception", e);
+            return AppResult.error(AppResult.EEXCEPT);
         } finally {
 
         }
@@ -126,7 +129,7 @@ public class Application extends Controller {
         Logger.info("post signin");
         JsonNode json = request().body().asJson();
         if (json == null) {
-            return appResultToPromise(AppResult.error(1, "invalid data"));
+            return appResultToPromise(AppResult.error(AppResult.EINVAL));
         }
         AppUserSignin signin = AppUserSignin.parseJson(json);
         Promise<AppResult> promise = Promise.promise(() -> postSigninJob(signin));
@@ -149,7 +152,7 @@ public class Application extends Controller {
     private AppResult signoutJob() {
         UserAuth userAuth = postUserAuth();
         if (userAuth == null)
-            return AppResult.error(1, "signout failed");
+            return AppResult.error(AppResult.EPERM);
         signout();
         return AppResult.success();
     }
@@ -210,18 +213,19 @@ public class Application extends Controller {
             Logger.info("post profile job");
 
             if (profile.name == null)
-                throw new Exception("bad request");
+                throw new AppException(AppResult.EINVAL);
 
             Logger.info("name=" + profile.name);
             UserAuth userAuth = postUserAuth();
             if (userAuth == null)
-                throw new Exception("bad request");
+                throw new AppException(AppResult.EPERM);
             if (!Users.updateName(userAuth.user.getUid(), profile.name))
-                return AppResult.error(1, "can't update");
+                return AppResult.error(AppResult.EDB_UPDATE);
             return AppResult.success();
+        } catch (AppException e) {
+            return e.getResult();
         } catch (Exception e) {
-            Logger.error("bad request", e);
-            return AppResult.error(1, "bad request");
+            return AppResult.error(AppResult.EEXCEPT);
         } finally {
 
         }
@@ -231,7 +235,7 @@ public class Application extends Controller {
         Logger.info("post profile");
         JsonNode json = request().body().asJson();
         if (json == null) {
-            return appResultToPromise(AppResult.error(1, "invalid data"));
+            return appResultToPromise(AppResult.error(AppResult.EINVAL));
         }
         AppUserProfile profile = AppUserProfile.parseJson(json);
         Promise<AppResult> promise = Promise.promise(() -> postProfileJob(profile));
@@ -260,23 +264,25 @@ public class Application extends Controller {
             Logger.info("title=" + postCreate.title + " content=" + postCreate.content);
 
             if (postCreate.title == null || postCreate.content == null)
-                throw new Exception("bad request");
+                throw new AppException(AppResult.EINVAL);
 
             UserAuth userAuth = postUserAuth();
             if (userAuth == null)
-                throw new Exception("bad request");
+                throw new AppException(AppResult.EAUTH);
 
             postCreate.title = Character.toUpperCase(postCreate.title.charAt(0)) + postCreate.title.substring(1);
             Post post = Posts.create(userAuth.user.getUid(), postCreate.title, postCreate.content);
             if (post == null)
-                throw new Exception("bad request");
+                throw new AppException(AppResult.EDB_UPDATE);
             AppResult result = AppResult.success();
             result.id = post.postId;
             Logger.info("post " + post.postId + " created");
             return result;
+        } catch (AppException e) {
+          return e.getResult();
         } catch (Exception e) {
-            Logger.error("bad request", e);
-            return AppResult.error(1, "post failed");
+            Logger.error("exception", e);
+            return AppResult.error(AppResult.EEXCEPT);
         } finally {
         }
     }
@@ -286,7 +292,7 @@ public class Application extends Controller {
 
         JsonNode json = request().body().asJson();
         if (json == null) {
-            return appResultToPromise(AppResult.error(1, "invalid data"));
+            return appResultToPromise(AppResult.error(AppResult.EINVAL));
         }
 
         AppPostCreate postCreate = AppPostCreate.parseJson(json);
