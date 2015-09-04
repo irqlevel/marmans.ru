@@ -28,7 +28,7 @@ public class Users {
         newUser.setHashp(BCrypt.hashpw(password, BCrypt.gensalt()));
 
         try {
-            session = Mybatis.getSession();
+            session = Db.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
             mapper.insert(newUser.getUid(), newUser.getName(), newUser.getEmail(), newUser.getHashp());
             session.commit();
@@ -46,7 +46,7 @@ public class Users {
         SqlSession session = null;
         boolean result = false;
         try {
-            session = Mybatis.getSession();
+            session = Db.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
             mapper.updateName(uid, name);
             session.commit();
@@ -62,7 +62,7 @@ public class Users {
         SqlSession session = null;
         User user = null;
         try {
-            session = Mybatis.getSession();
+            session = Db.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
             user = mapper.getByEmail(email);
         } finally {
@@ -77,7 +77,7 @@ public class Users {
         SqlSession session = null;
         User user = null;
         try {
-            session = Mybatis.getSession();
+            session = Db.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
             user = mapper.get(uid);
         } finally {
@@ -98,7 +98,7 @@ public class Users {
         newUser.setName(genRndString());
 
         try {
-            session = Mybatis.getSession();
+            session = Db.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
             mapper.insert(newUser.getUid(), newUser.getName(), newUser.getEmail(), genRndString());
             session.commit();
@@ -116,7 +116,7 @@ public class Users {
         List<User> users = null;
 
         try {
-            session = Mybatis.getSession();
+            session = Db.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
             users = mapper.getAll();
         } finally {

@@ -1,12 +1,8 @@
-import models.Mybatis;
+import models.Db;
 import models.UserSessions;
-import org.apache.ibatis.session.SqlSession;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
-
-import org.apache.ibatis.session.SqlSessionFactory;
-import scala.App;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -19,8 +15,8 @@ public class Global extends GlobalSettings {
     public void onStart(Application app) {
         super.onStart(app);
         Logger.info("on start");
-        Mybatis.dbDrop();
-        Mybatis.dbSync();
+        Db.drop();
+        Db.sync();
 
         scheduler.scheduleAtFixedRate(new Runnable() {
             @Override

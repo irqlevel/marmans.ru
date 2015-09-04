@@ -1,4 +1,4 @@
-@(currUser: models.User, csrfToken: String, title: String, scripts: Html, content: Html)
+@(userAuth: models.UserAuth, title: String, scripts: Html, content: Html)
 
 <!DOCTYPE html>
 
@@ -24,11 +24,11 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="/">Project</a>
-                    @if(currUser == null) {
+                    @if(userAuth.user == null) {
                     <a class="navbar-brand" href="/join">Join</a>
                     <a class="navbar-brand" href="/signin">Sign in</a>
                     }
-                    @if(currUser != null) {
+                    @if(userAuth.user != null) {
                     <a class="navbar-brand" id="signout" href="/signout">Sign out</a>
                     <a class="navbar-brand" href="/profile">Profile</a>
                     }
@@ -48,13 +48,13 @@
             </footer>
         </div> <!-- /container -->
         <div style="display:none">
-            @if(currUser != null) {
-            <p id="currUserUid">@currUser.getUid()</p>
+            @if(userAuth.user != null) {
+            <p id="currUserUid">@userAuth.user.getUid()</p>
             } else {
             <p id="currUserUid">-1</p>
             }
-            @if(csrfToken != null) {
-            <p id="csrfToken">@csrfToken</p>
+            @if(userAuth.csrfToken != null) {
+            <p id="csrfToken">@userAuth.csrfToken</p>
             } else {
             <p id="csrfToken">invalid</p>
             }

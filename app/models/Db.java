@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 
-public class Mybatis {
+public class Db {
     private static volatile SqlSessionFactory factory = null;
 
     private static SqlSessionFactory buildFactory() {
@@ -38,7 +38,7 @@ public class Mybatis {
         return getFactory().openSession(false);
     }
 
-    public static boolean dbSync() {
+    public static boolean sync() {
         SqlSession session = null;
         try {
             session = getFactory().openSession(false);
@@ -61,7 +61,7 @@ public class Mybatis {
         return false;
     }
 
-    public static boolean dbDrop() {
+    public static boolean drop() {
         SqlSession session = null;
         try {
             session = getFactory().openSession(false);
@@ -87,7 +87,7 @@ public class Mybatis {
     public static SqlSessionFactory getFactory() {
         if (factory != null)
             return factory;
-        synchronized (Mybatis.class) {
+        synchronized (Db.class) {
             if (factory == null) {
                 factory = buildFactory();
             }

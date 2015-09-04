@@ -1,8 +1,5 @@
 package models;
 
-import lib.BCrypt;
-import lib.Rng;
-import models.mappers.UserMapper;
 import models.mappers.UserSessionMapper;
 import org.apache.ibatis.session.SqlSession;
 
@@ -12,7 +9,7 @@ public class UserSessions {
         SqlSession sql = null;
         boolean result = false;
         try {
-            sql = Mybatis.getSession();
+            sql = Db.getSession();
             UserSessionMapper mapper = sql.getMapper(UserSessionMapper.class);
             mapper.insert(session.getValue(), session.getCsrfToken(), session.getUid(), session.getExpires());
             sql.commit();
@@ -29,7 +26,7 @@ public class UserSessions {
         SqlSession sql = null;
         boolean result = false;
         try {
-            sql = Mybatis.getSession();
+            sql = Db.getSession();
             UserSessionMapper mapper = sql.getMapper(UserSessionMapper.class);
             mapper.deleteByUid(uid);
             sql.commit();
@@ -45,7 +42,7 @@ public class UserSessions {
         SqlSession sql = null;
         boolean result = false;
         try {
-            sql = Mybatis.getSession();
+            sql = Db.getSession();
             UserSessionMapper mapper = sql.getMapper(UserSessionMapper.class);
             mapper.delete(value);
             sql.commit();
@@ -62,7 +59,7 @@ public class UserSessions {
         SqlSession sql = null;
         boolean result = false;
         try {
-            sql = Mybatis.getSession();
+            sql = Db.getSession();
             UserSessionMapper mapper = sql.getMapper(UserSessionMapper.class);
             mapper.deleteExpired(now);
             sql.commit();
@@ -78,7 +75,7 @@ public class UserSessions {
         SqlSession sql = null;
         UserSession session = null;
         try {
-            sql = Mybatis.getSession();
+            sql = Db.getSession();
             UserSessionMapper mapper = sql.getMapper(UserSessionMapper.class);
             session = mapper.get(value);
         } finally {

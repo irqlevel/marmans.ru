@@ -1,9 +1,9 @@
-@(currUser: models.User, csrfToken: String, user: models.User)
+@(userAuth: models.UserAuth, user: models.User)
 
 @content = {
     <h3>Profile @user.getUid() email @user.getEmail() name @user.getName()</h3>
 
-    @if((currUser != null) && (currUser.getUid() == user.getUid())) {
+    @if((userAuth.user != null) && (userAuth.user.getUid() == user.getUid())) {
         <form id="profile-form">
             <div class="form-group">
                 <label for="inputName">Your name</label>
@@ -21,4 +21,4 @@
 <script src="@routes.Assets.versioned("javascripts/profile.js")" type="text/javascript"></script>
 }
 
-@main(currUser, csrfToken, "Profile", scripts, content)
+@main(userAuth, "Profile", scripts, content)

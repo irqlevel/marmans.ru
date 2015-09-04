@@ -5,25 +5,20 @@ import api.AppUserJoin;
 import api.AppUserProfile;
 import api.AppUserSignin;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import lib.BCrypt;
 
 import models.*;
 
 import play.libs.F.*;
-import play.libs.Json;
 import play.mvc.*;
 import play.Logger;
 import views.html.*;
-
-import java.math.BigInteger;
-import java.util.List;
 
 public class Application extends Controller {
     public Promise<Result> index() {
         Logger.info("index");
         Promise<UserAuth> promise = Promise.promise(() -> currUserAuth());
-        return promise.map(userAuth -> ok(index.render(userAuth.user, userAuth.csrfToken, "Hello world!")));
+        return promise.map(userAuth -> ok(index.render(userAuth, "Hello world!")));
     }
 
     private UsersResult usersJob() {
@@ -37,19 +32,19 @@ public class Application extends Controller {
     public Promise<Result> users() {
         Logger.info("users");
         Promise<UsersResult> promise = Promise.promise(() -> usersJob());
-        return promise.map(result -> ok(usersv.render(result.userAuth.user, result.userAuth.csrfToken, result.users)));
+        return promise.map(result -> ok(usersv.render(result.userAuth, result.users)));
     }
 
     public Promise<Result> signin() {
         Logger.info("signin");
         Promise<UserAuth> promise = Promise.promise(() -> currUserAuth());
-        return promise.map(userAuth -> ok(signinv.render(userAuth.user, userAuth.csrfToken)));
+        return promise.map(userAuth -> ok(signinv.render(userAuth)));
     }
 
     public Promise<Result> join() {
         Logger.info("join");
         Promise<UserAuth> promise = Promise.promise(() -> currUserAuth());
-        return promise.map(userAuth -> ok(joinv.render(userAuth.user, userAuth.csrfToken)));
+        return promise.map(userAuth -> ok(joinv.render(userAuth)));
     }
 
     private AppResult postJoinJob(AppUserJoin join) {
@@ -190,7 +185,7 @@ public class Application extends Controller {
         Logger.info("profile uid=" + uid);
         Promise<ProfileResult> promise = Promise.promise(() -> profileJob(uid));
         return promise.map(result -> (result.user != null) ?
-                ok(profilev.render(result.userAuth.user, result.userAuth.csrfToken, result.user)) : notFound());
+                ok(profilev.render(result.userAuth, result.user)) : notFound());
     }
 
     private AppResult postProfileJob(AppUserProfile profile) {
@@ -235,6 +230,6 @@ public class Application extends Controller {
 
         Promise<UserAuth> promise = Promise.promise(() -> currUserAuth());
         return promise.map(userAuth -> (userAuth.user == null) ? redirect(controllers.routes.Application.signin()) :
-                ok(profilev.render(userAuth.user, userAuth.csrfToken, userAuth.user)));
+                ok(profilev.render(userAuth, userAuth.user)));
     }
 }

@@ -1,4 +1,4 @@
-@(currUser: models.User, csrfToken: String, users: List[models.User])
+@(userAuth: models.UserAuth, users: List[models.User])
 
 @scripts = {
 }
@@ -25,4 +25,4 @@
 </table>
 }
 
-@main(currUser, csrfToken, "Users", scripts, content)
+@main(userAuth, "Users", scripts, content)
