@@ -3,13 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="models.mappers.UserSessionMapper">
-    <update id="createTable">
-        CREATE TABLE IF NOT EXISTS Sessions(value VARCHAR(255) PRIMARY KEY NOT NULL,
-        uid BIGINT UNIQUE NOT NULL, csrfToken VARCHAR(255) UNIQUE NOT NULL, expires BIGINT NOT NULL);
-    </update>
-    <update id="dropTable">
-        DROP TABLE IF EXISTS Sessions;
-    </update>
     <insert id="insert" parameterType="map">
         INSERT INTO Sessions (value, csrfToken, uid, expires) VALUES(#{value}, #{csrfToken}, #{uid}, #{expires});
     </insert>

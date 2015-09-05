@@ -1,5 +1,5 @@
-import models.Db.Db;
-import models.Db.UserSessions;
+import models.dba.Db;
+import models.dba.UserSessions;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
@@ -15,8 +15,6 @@ public class Global extends GlobalSettings {
     public void onStart(Application app) {
         super.onStart(app);
         Logger.info("on start");
-        Db.drop();
-        Db.sync();
 
         scheduler.scheduleAtFixedRate(new Runnable() {
             @Override

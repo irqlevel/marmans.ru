@@ -6,13 +6,12 @@ import lib.BCrypt;
 
 import models.*;
 
-import models.Db.Posts;
-import models.Db.UserSessions;
-import models.Db.Users;
+import models.dba.Posts;
+import models.dba.UserSessions;
+import models.dba.Users;
 import play.libs.F.*;
 import play.mvc.*;
 import play.Logger;
-import scala.App;
 import views.html.*;
 
 public class Application extends Controller {

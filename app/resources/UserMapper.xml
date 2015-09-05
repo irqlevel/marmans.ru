@@ -3,14 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="models.mappers.UserMapper">
-    <update id="createTable">
-        CREATE TABLE IF NOT EXISTS Users(uid BIGINT PRIMARY KEY NOT NULL, name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL UNIQUE, hashp VARCHAR(255) NOT NULL);
-    </update>
-    <update id="dropTable">
-        DROP TABLE IF EXISTS Users;
-    </update>
-
     <update id="updateName" parameterType="map">
         UPDATE Users SET name = #{name} WHERE uid = #{uid};
     </update>

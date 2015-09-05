@@ -3,14 +3,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="models.mappers.PostMapper">
-    <update id="createTable">
-        CREATE TABLE IF NOT EXISTS Posts(postId BIGINT PRIMARY KEY NOT NULL, uid BIGINT, title VARCHAR(255) NOT NULL,
-        content TEXT NOT NULL, creationTime BIGINT);
-    </update>
-    <update id="dropTable">
-        DROP TABLE IF EXISTS Posts;
-    </update>
-
     <insert id="insert" parameterType="map">
         INSERT INTO Posts (postId, uid, title, content, creationTime)
         VALUES(#{postId}, #{uid}, #{title}, #{content}, #{creationTime});
