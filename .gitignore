@@ -14,3 +14,4 @@ tmp
 dist
 .cache
 *.log
+prod_pid
