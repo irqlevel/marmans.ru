@@ -162,7 +162,7 @@ public class Application extends Controller {
         return promise.map(val -> ok(val.toJson()));
     }
 
-    private UserAuth currUserAuth() {
+    public static UserAuth currUserAuth() {
         UserAuth userAuth = new UserAuth();
         String value = session().get("usersession");
         if (value == null)

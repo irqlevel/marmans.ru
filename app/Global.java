@@ -1,8 +1,11 @@
-import models.dba.Db;
 import models.dba.UserSessions;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
+
+import play.mvc.Action;
+import play.mvc.Http.Request;
+import java.lang.reflect.Method;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -29,5 +32,11 @@ public class Global extends GlobalSettings {
         scheduler.shutdown();
         super.onStop(app);
         Logger.info("on stop");
+    }
+
+    public Action onRequest(Request request, Method actionMethod) {
+        Logger.info("on request uri=" + request.uri() + " path=" + request.path() +
+                    " method=" + request.method() + " addr=" + request.remoteAddress());
+        return super.onRequest(request, actionMethod);
     }
 }
