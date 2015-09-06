@@ -14,4 +14,5 @@ tmp
 dist
 .cache
 *.log
+*.pyc
 prod_pid
