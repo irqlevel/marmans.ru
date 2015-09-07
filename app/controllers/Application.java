@@ -12,7 +12,10 @@ import models.dba.Users;
 import play.libs.F.*;
 import play.mvc.*;
 import play.Logger;
+import scala.App;
 import views.html.*;
+
+import java.util.List;
 
 public class Application extends Controller {
     public Promise<Result> index() {
@@ -323,5 +326,29 @@ public class Application extends Controller {
         Logger.info("post " + postId);
         Promise<PostResult> promise = Promise.promise(() -> postJob(postId));
         return promise.map(val -> ok(postv.render(val.userAuth, val.post)));
+    }
+
+    private AppPosts latestPostsJob(long offset, long limit) {
+        try {
+            if (offset < 0 || limit <= 0)
+                throw new AppException(AppResult.EINVAL);
+
+            List<Post> posts = Posts.getLatest(offset, limit);
+            AppPosts appPosts = new AppPosts(AppResult.success());
+            appPosts.setPosts(posts);
+            return appPosts;
+        } catch (AppException e) {
+            return new AppPosts(e.getResult());
+        } catch (Exception e) {
+            Logger.error("exception", e);
+            return new AppPosts(AppResult.error(AppResult.EEXCEPT));
+        } finally {
+
+        }
+    }
+
+    public Promise<Result> latestPosts(long offset, long limit) {
+        Promise<AppPosts> promise = Promise.promise(() -> latestPostsJob(offset, limit));
+        return promise.map(appPosts -> ok(appPosts.toJson()));
     }
 }

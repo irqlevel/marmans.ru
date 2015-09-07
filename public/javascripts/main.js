@@ -17,11 +17,21 @@ function postJson(url, json)
             });
 }
 
+function getJson(url, json)
+{
+        return $.ajax({
+            method: "GET",
+            url: url,
+            data: json,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            });
+}
+
 function onReady()
 {
     csrfToken = $("#csrfToken").text();
     currUserUid = parseInt($("#currUserUid").text());
-    console.log("currUserUid=" + currUserUid + " csrfToken=" + csrfToken);
     $("#signout" ).click(function( event ) {
         event.preventDefault();
         postJson("/signout", "{}")

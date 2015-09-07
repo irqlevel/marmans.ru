@@ -13,6 +13,7 @@ public interface PostMapper {
                        @Param("content") String content, @Param("creationTime") Long creationTime);
 
     public Post get(Long postId);
+    public List<Post> getLatest(@Param("offset") Long offset, @Param("limit") Long limit);
     public void delete(Long postId);
 
     public List<Post> getUserAll(Long uid);

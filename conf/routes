@@ -23,5 +23,7 @@ POST    /post/create                controllers.Application.postPost()
 GET     /post/:postId               controllers.Application.post(postId: Long)
 GET     /posts                      controllers.Application.posts()
 
+GET     /posts/latest/offset/:offset/limit/:limit   controllers.Application.latestPosts(offset: Long, limit: Long)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

@@ -1,5 +1,6 @@
 package models.dba;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lib.Rng;
 import models.Post;
 import models.mappers.PostMapper;
@@ -40,6 +41,20 @@ public class Posts {
             session = Db.getSession();
             PostMapper mapper = session.getMapper(PostMapper.class);
             posts = mapper.getAll();
+        } finally {
+            if (session != null)
+                session.close();
+        }
+        return posts;
+    }
+
+    public static List<Post> getLatest(long offset, long limit) {
+        SqlSession session = null;
+        List<Post> posts = null;
+        try {
+            session = Db.getSession();
+            PostMapper mapper = session.getMapper(PostMapper.class);
+            posts = mapper.getLatest(offset, limit);
         } finally {
             if (session != null)
                 session.close();

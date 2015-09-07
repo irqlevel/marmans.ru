@@ -35,7 +35,7 @@ public class Global extends GlobalSettings {
     }
 
     public Action onRequest(Request request, Method actionMethod) {
-        Logger.info("on request uri=" + request.uri() + " path=" + request.path() +
+        Logger.info("request uri=" + request.uri() + " path=" + request.path() +
                     " method=" + request.method() + " addr=" + request.remoteAddress());
         return super.onRequest(request, actionMethod);
     }

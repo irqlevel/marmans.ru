@@ -20,6 +20,10 @@
         SELECT * FROM Posts WHERE uid = #{uid};
     </select>
 
+    <select id="getLatest" parameterType="map" resultType="models.Post">
+        SELECT * FROM Posts ORDER BY creationTime DESC LIMIT #{limit} OFFSET #{offset};
+    </select>
+
     <select id="getAll" resultType="models.Post">
         SELECT * FROM Posts;
     </select>
