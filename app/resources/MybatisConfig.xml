@@ -18,5 +18,6 @@
         <mapper resource="UserMapper.xml"/>
         <mapper resource="UserSessionMapper.xml"/>
         <mapper resource="PostMapper.xml"/>
+        <mapper resource="CommentMapper.xml"/>
     </mappers>
 </configuration>

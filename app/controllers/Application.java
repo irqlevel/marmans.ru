@@ -6,13 +6,13 @@ import lib.BCrypt;
 
 import models.*;
 
+import models.dba.Comments;
 import models.dba.Posts;
 import models.dba.UserSessions;
 import models.dba.Users;
 import play.libs.F.*;
 import play.mvc.*;
 import play.Logger;
-import scala.App;
 import views.html.*;
 
 import java.util.List;
@@ -350,5 +350,65 @@ public class Application extends Controller {
     public Promise<Result> latestPosts(long offset, long limit) {
         Promise<AppPosts> promise = Promise.promise(() -> latestPostsJob(offset, limit));
         return promise.map(appPosts -> ok(appPosts.toJson()));
+    }
+
+    private AppResult postCommentJob(long postId, AppCommentCreate createComment) {
+        try {
+            if (postId < 0 || createComment.postId != postId)
+                throw new AppException(AppResult.EINVAL);
+
+            UserAuth userAuth = postUserAuth();
+            if (userAuth == null)
+                throw new AppException(AppResult.EAUTH);
+
+            Comment comment = Comments.create(userAuth.user.getUid(), postId, -1, createComment.content);
+            if (comment == null)
+                throw new AppException(AppResult.EDB_UPDATE);
+            AppResult result = AppResult.success();
+            result.id = comment.commentId;
+            return result;
+        } catch (AppException e) {
+            return e.getResult();
+        } catch (Exception e) {
+            Logger.error("exception", e);
+            return AppResult.error(AppResult.EEXCEPT);
+        } finally {
+
+        }
+    }
+
+    public Promise<Result> postComment(long postId) {
+        Logger.info("post comment for post " + postId);
+
+        JsonNode json = request().body().asJson();
+        if (json == null) {
+            return appResultToPromise(AppResult.error(AppResult.EINVAL));
+        }
+        AppCommentCreate comment = AppCommentCreate.parseJson(json);
+        Promise<AppResult> promise = Promise.promise(() -> postCommentJob(postId, comment));
+        return promise.map(val -> ok(val.toJson()));
+    }
+
+    private AppComments commentsJob(long postId) {
+        try {
+            if (postId < 0)
+                throw new AppException(AppResult.EINVAL);
+            List<Comment> comments = Comments.getCommentsByPostId(postId);
+            AppComments appComments = new AppComments(AppResult.success());
+            appComments.setComments(comments);
+            return appComments;
+        } catch (AppException e) {
+            return new AppComments(e.getResult());
+        } catch (Exception e) {
+            Logger.error("exception", e);
+            return new AppComments(AppResult.error(AppResult.EEXCEPT));
+        } finally {
+
+        }
+    }
+
+    public Promise<Result> comments(long postId) {
+        Promise<AppComments> promise = Promise.promise(() -> commentsJob(postId));
+        return promise.map(appComments -> ok(appComments.toJson()));
     }
 }

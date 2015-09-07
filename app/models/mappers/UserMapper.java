@@ -6,9 +6,6 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface UserMapper {
-    public void createTable();
-    public void dropTable();
-
     public void insert(@Param("uid") Long uid, @Param("name") String name,
                            @Param("email") String email, @Param("hashp") String hashp);
 

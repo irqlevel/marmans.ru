@@ -3,7 +3,6 @@ package api;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Post;
-import scala.App;
 
 import java.util.List;
 

@@ -38,3 +38,11 @@ body {
 .footer {
     text-align:center;
 }
+
+.post-comment-block {
+    text-align:left;
+}
+
+.post-comments {
+    text-align:left;
+}

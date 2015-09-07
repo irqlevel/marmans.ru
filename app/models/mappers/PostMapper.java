@@ -6,9 +6,6 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface PostMapper {
-    public void createTable();
-    public void dropTable();
-
     public void insert(@Param("postId") Long postId, @Param("uid") Long uid, @Param("title") String title,
                        @Param("content") String content, @Param("creationTime") Long creationTime);
 

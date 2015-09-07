@@ -49,6 +49,10 @@ public class AppResult {
         this.resultDesc = resultCodeToDesc(resultCode);
     }
 
+    public AppResult(int resultCode) {
+        setResultCode(resultCode);
+    }
+
     public AppResult() {
         setResultCode(EUNDEF);
     }
