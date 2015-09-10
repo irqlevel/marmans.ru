@@ -158,5 +158,6 @@ function onReady()
     loadPostComments(postId);
     bindPostComment(postId);
     fixCommentsContent();
+    fixPostsContent();
 }
 $(document).ready(onReady);
