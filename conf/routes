@@ -25,6 +25,7 @@ GET     /posts                      controllers.Application.posts()
 
 GET     /posts/latest/offset/:offset/limit/:limit   controllers.Application.latestPosts(offset: Long, limit: Long)
 POST    /comment/:postId            controllers.Application.postComment(postId: Long)
+POST    /comment/:commentId/reply   controllers.Application.postCommentReply(commentId: Long)
 GET     /comments/:postId           controllers.Application.comments(postId: Long)
 
 # Map static resources from the /public folder to the /assets URL path

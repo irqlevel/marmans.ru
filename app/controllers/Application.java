@@ -400,6 +400,48 @@ public class Application extends Controller {
         return promise.map(val -> ok(val.toJson()));
     }
 
+    private AppResult postCommentReplyJob(long commentId, AppCommentCreate createComment) {
+        try {
+            if (commentId < 0)
+                throw new AppException(AppResult.EINVAL);
+
+            UserAuth userAuth = postUserAuth();
+            if (userAuth == null)
+                throw new AppException(AppResult.EAUTH);
+
+            Comment parent = Comments.get(commentId);
+            if (parent == null)
+                throw new AppException(AppResult.ENOTFOUND);
+
+            Comment comment = Comments.create(userAuth.user.getUid(), parent.postId, parent.commentId,
+                                              createComment.content);
+            if (comment == null)
+                throw new AppException(AppResult.EDB_UPDATE);
+            AppResult result = AppResult.success();
+            result.id = comment.commentId;
+            return result;
+        } catch (AppException e) {
+            return e.getResult();
+        } catch (Exception e) {
+            Logger.error("exception", e);
+            return AppResult.error(AppResult.EEXCEPT);
+        } finally {
+
+        }
+    }
+
+    public Promise<Result> postCommentReply(long commentId) {
+        Logger.info("post comment reply for commentId " + commentId);
+
+        JsonNode json = request().body().asJson();
+        if (json == null) {
+            return appResultToPromise(AppResult.error(AppResult.EINVAL));
+        }
+        AppCommentCreate comment = AppCommentCreate.parseJson(json);
+        Promise<AppResult> promise = Promise.promise(() -> postCommentReplyJob(commentId, comment));
+        return promise.map(val -> ok(val.toJson()));
+    }
+
     private AppComments commentsJob(long postId) {
         try {
             if (postId < 0)

@@ -10,9 +10,9 @@ public class AppCommentCreate {
     public static AppCommentCreate parseJson(JsonNode json)
     {
         AppCommentCreate result = new AppCommentCreate();
-        result.postId = json.findPath("postId").asLong();
+        result.postId = json.findPath("postId").asLong(-1);
         result.content = json.findPath("content").textValue();
-        result.parentId = json.findPath("parentId").asLong();
+        result.parentId = json.findPath("parentId").asLong(-1);
         return result;
     }
 }
