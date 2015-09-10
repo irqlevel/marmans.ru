@@ -1,13 +1,12 @@
 <div class="post-container">
 <div class="post-title">
-    <p><strong>{{title}}</strong> by <a href="/profile/{{uid}}">{{uid}}</a> </p>
+    <p><strong>{{title}}</strong> by <a href="/profile/{{uid}}">{{userName}}</a> <span class="post-date">{{date}}</span></p>
 </div>
 <div class="post-content">
     <p class="post-content-text">{{content}}</p>
 </div>
 <div class="post-link">
-    <a href="/post/{{postId}}">Details</a>
-    <a class="post-comment" id="post-comment-link-{{postId}}" href="/comment/{{postId}}/post">Comment</a>
+    <a class="btn btn-default" href="/post/{{postId}}">Details</a>
 </div>
 <div class="post-comment-block" id="post-comment-block-{{postId}}">
 </div>

@@ -13,6 +13,8 @@ body {
 }
 .post-content {
     text-align:left;
+    padding: 10px;
+    margin: 10px;
 }
 .post-link {
     text-align:left;
@@ -39,10 +41,20 @@ body {
     text-align:center;
 }
 
+.post-comment-link {
+    text-align:left;
+    margin: 0px 0px 40px 0px;
+}
+
 .post-comment-block {
     text-align:left;
+    margin: 0px 0px 40px 0px;
 }
 
 .post-comments {
     text-align:left;
+}
+
+.post-id {
+    display: none;
 }

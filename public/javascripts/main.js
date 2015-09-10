@@ -28,18 +28,15 @@ function getJson(url, json)
             });
 }
 
+function fixPostsContent() {
+    $(".post-content-text").each(function(index) {
+        $(this).html($(this).html().replaceAll("\n", "<br>"));
+    });
+}
+
 function onReady()
 {
     csrfToken = $("#csrfToken").text();
     currUserUid = parseInt($("#currUserUid").text());
-    $("#signout" ).click(function( event ) {
-        event.preventDefault();
-        postJson("/signout", "{}")
-        .done(function(result) {
-                window.location.replace("/");
-        })
-        .fail(function() {
-        });
-    });
 }
 $(document).ready(onReady);

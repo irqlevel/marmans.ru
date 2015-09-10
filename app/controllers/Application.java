@@ -4,18 +4,24 @@ import api.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import lib.BCrypt;
 
+import lib.DateFormat;
 import models.*;
 
 import models.dba.Comments;
 import models.dba.Posts;
 import models.dba.UserSessions;
 import models.dba.Users;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import play.libs.F.*;
 import play.mvc.*;
 import play.Logger;
 import views.html.*;
 
 import java.util.List;
+import java.util.TimeZone;
 
 public class Application extends Controller {
     public Promise<Result> index() {
@@ -105,8 +111,7 @@ public class Application extends Controller {
             if (!BCrypt.checkpw(signin.password, user.getHashp()))
                 throw new AppException(AppResult.EAUTH);
 
-            if (postUserAuth() != null)
-                signout();
+            signout(user.getUid());
             UserSession session = UserSession.genSession(user.getUid(), 24*3600*1000);
             if (!UserSessions.insert(session))
                 throw new AppException(AppResult.EDB_UPDATE);
@@ -138,24 +143,19 @@ public class Application extends Controller {
         return promise.map(val -> ok(val.toJson()));
     }
 
-    private void signout() {
+    private void signout(long uid) {
         String value = session().get("usersession");
         session().remove("usersession");
-        UserSession session = UserSessions.get(value);
-        if (session != null) {
-            if (session.getExpires() > System.currentTimeMillis()) {
-                UserSessions.deleteByUid(session.getUid());
-            } else {
-                UserSessions.delete(session.getValue());
-            }
-        }
+        if (value != null)
+            UserSessions.delete(value);
+        UserSessions.deleteByUid(uid);
     }
 
     private AppResult signoutJob() {
         UserAuth userAuth = postUserAuth();
         if (userAuth == null)
             return AppResult.error(AppResult.EPERM);
-        signout();
+        signout(userAuth.user.getUid());
         return AppResult.success();
     }
 
@@ -304,7 +304,12 @@ public class Application extends Controller {
 
     private PostsResult postsJob() {
         PostsResult result = new PostsResult();
-        result.posts = Posts.getAll();
+        List<Post> posts = Posts.getAll();
+        for (Post post: posts) {
+            post.userName = uidToUserName(post.uid);
+            post.date = DateFormat.timeToString(post.creationTime);
+        }
+        result.posts = posts;
         result.userAuth = currUserAuth();
         return result;
     }
@@ -318,6 +323,8 @@ public class Application extends Controller {
     private PostResult postJob(long postId) {
         PostResult result = new PostResult();
         result.post = Posts.get(postId);
+        result.post.userName = uidToUserName(result.post.uid);
+        result.post.date = DateFormat.timeToString(result.post.creationTime);
         result.userAuth = currUserAuth();
         return result;
     }
@@ -334,6 +341,10 @@ public class Application extends Controller {
                 throw new AppException(AppResult.EINVAL);
 
             List<Post> posts = Posts.getLatest(offset, limit);
+            for (Post post: posts) {
+                post.userName = uidToUserName(post.uid);
+                post.date = DateFormat.timeToString(post.creationTime);
+            }
             AppPosts appPosts = new AppPosts(AppResult.success());
             appPosts.setPosts(posts);
             return appPosts;
@@ -394,6 +405,10 @@ public class Application extends Controller {
             if (postId < 0)
                 throw new AppException(AppResult.EINVAL);
             List<Comment> comments = Comments.getCommentsByPostId(postId);
+            for (Comment comment: comments) {
+                comment.userName = uidToUserName(comment.uid);
+                comment.date = DateFormat.timeToString(comment.creationTime);
+            }
             AppComments appComments = new AppComments(AppResult.success());
             appComments.setComments(comments);
             return appComments;
@@ -410,5 +425,12 @@ public class Application extends Controller {
     public Promise<Result> comments(long postId) {
         Promise<AppComments> promise = Promise.promise(() -> commentsJob(postId));
         return promise.map(appComments -> ok(appComments.toJson()));
+    }
+
+    private String uidToUserName(long uid) {
+        User user = Users.get(uid);
+        if (user == null)
+            return null;
+        return user.getName();
     }
 }

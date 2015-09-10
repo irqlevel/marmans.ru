@@ -10,7 +10,8 @@ public class Comment {
     public long commentId = -1;
     public long creationTime = -1;
     public String content = null;
-
+    public String userName = null;
+    public String date = null;
     public ObjectNode toJson() {
         ObjectNode json = Json.newObject();
         json.put("uid", uid);
@@ -19,6 +20,8 @@ public class Comment {
         json.put("content", content);
         json.put("commentId", commentId);
         json.put("creationTime", creationTime);
+        json.put("userName", userName);
+        json.put("date", date);
         return json;
     }
 }

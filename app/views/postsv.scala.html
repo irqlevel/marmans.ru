@@ -4,13 +4,13 @@
 @for(post <- posts) {
 <div class="post-container">
 <div class="post-title">
-    <p><strong>@post.title</strong> by <a href="/profile/@post.uid">@post.uid</a> </p>
+    <p><strong>@post.title</strong> by <a href="/profile/@post.uid">@post.userName</a> <span class="post-date">@post.date</span> </p>
 </div>
 <div class="post-content">
     <p class="post-content-text">@post.content</p>
 </div>
 <div class="post-link">
-    <a href="/post/@post.postId">More</a>
+    <a class="btn btn-default" href="/post/@post.postId">Details</a>
 </div>
 </div>
 <hr>
@@ -18,7 +18,7 @@
 }
 
 @scripts = {
-<script src="@routes.Assets.versioned("javascripts/post.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/posts.js")" type="text/javascript"></script>
 }
 
 @main(userAuth, "Posts", scripts, content)

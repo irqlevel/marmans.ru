@@ -9,6 +9,8 @@ public class Post {
     public long creationTime = -1;
     public String title = null;
     public String content = null;
+    public String userName = null;
+    public String date = null;
 
     public ObjectNode toJson() {
         ObjectNode json = Json.newObject();
@@ -17,6 +19,8 @@ public class Post {
         json.put("uid", uid);
         json.put("creationTime", creationTime);
         json.put("postId", postId);
+        json.put("userName", userName);
+        json.put("date", date);
         return json;
     }
 }

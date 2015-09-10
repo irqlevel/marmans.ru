@@ -2,12 +2,23 @@
 
 @content = {
 <div class="post-container">
-<div class="post-title">
-    <p><strong>@post.title</strong> by <a href="/profile/@post.uid">@post.uid</a> </p>
-</div>
-<div class="post-content">
-    <p class="post-content-text">@post.content</p>
-</div>
+    <div class="post-title">
+        <p><strong>@post.title</strong> by <a href="/profile/@post.uid">@post.userName</a> <span class="post-date">@post.date</span></p>
+    </div>
+    <div class="post-content">
+        <p class="post-content-text">@post.content</p>
+    </div>
+    <hr>
+    <div class="post-comment-link">
+        <a class="btn btn-default" id="post-comment-link-@post.postId" href="/comment/@post.postId/post">Comment</a>
+    </div>
+    <div class="post-comment-block" id="post-comment-block-@post.postId">
+    </div>
+    <div class="post-comments" id="post-comments-@post.postId">
+    </div>
+    <div class="post-id">
+        <p id="post-id">@post.postId</p>
+    </div>
 </div>
 }
 

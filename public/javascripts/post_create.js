@@ -1,4 +1,4 @@
-function showJoinError(errorMessage) {
+function showPostCreateError(errorMessage) {
     $("#post-create-error-text").text(errorMessage);
     $("#post-create-error").show();
 }
@@ -13,13 +13,13 @@ function onReady()
         postJson("/post/create", JSON.stringify({ "title": $('#inputTitle').val(), "content" : $('#inputContent').val()}))
         .done(function(result) {
             if (result.resultCode) {
-                showJoinError(result.resultDesc);
+                showPostCreateError(result.resultDesc);
             } else {
                 window.location.replace("/post/" + result.id);
             }
         })
         .fail(function() {
-            showJoinError("HTTP request failed");
+            showPostCreateError("HTTP request failed");
         });
     });
 }

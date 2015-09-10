@@ -2,20 +2,25 @@
 
 @content = {
     <div id="profile-container">
-    <h3>uid @user.getUid() email @user.getEmail() name @user.getName()</h3>
+        <h3>uid @user.getUid() email @user.getEmail() name @user.getName()</h3>
+        @if((userAuth.user != null) && (userAuth.user.getUid() == user.getUid())) {
+            <a class="btn btn-default" id="signout" href="/signout">Sign out</a>
+        }
 
-    @if((userAuth.user != null) && (userAuth.user.getUid() == user.getUid())) {
-        <form id="profile-form">
-            <div class="form-group">
-                <label for="inputName">Your name</label>
-                <input type="text" class="form-control" id="inputName" placeholder="@user.getName()">
+        @if((userAuth.user != null) && (userAuth.user.getUid() == user.getUid())) {
+            <div>
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="inputName">Your name</label>
+                        <input type="text" class="form-control" id="inputName" placeholder="@user.getName()">
+                    </div>
+                    <button type="submit" class="btn btn-default">Update</button>
+                </form>
+                <div id="profile-error">
+                    <p class="error-text" id="profile-error-text"></p>
+                </div>
             </div>
-            <button type="submit" class="btn btn-default">Update</button>
-        </form>
-        <div id="profile-error">
-            <p class="error-text" id="profile-error-text"></p>
-        </div>
-    }
+        }
     </div>
 }
 
