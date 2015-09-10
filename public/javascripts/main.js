@@ -1,5 +1,18 @@
 var csrfToken = "";
 var currUserUid = -1;
+var ESUCCESS = 0;
+var EINVAL = 1;
+var EIO = 2;
+var ENOMEM = 3;
+var ENOTFOUND = 4;
+var EXISTS = 5;
+var EPERM = 6;
+var ESIGNIN = 7;
+var EUNDEF = 8;
+var EDB_UPDATE = 9;
+var EDB_QUERY = 10;
+var EEXCEPT = 11;
+var EAUTH = 12;
 
 String.prototype.replaceAll = function(search, replace){
   return this.split(search).join(replace);

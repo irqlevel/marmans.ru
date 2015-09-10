@@ -31,9 +31,12 @@ function bindCommentsReply(postId)
 {
     $(".comment-reply-link").click(function (event) {
         event.preventDefault();
+        console.log("clientY=" + event.clientY);
+        $("#reply-comment-block").empty();
         var id = $(this).attr("id");
         var commentId = parseInt(id.replace(/^comment-reply-link-/, ''));
         $("#reply-comment-block-" + commentId).append(Mustache.render(reply_comment_template, {commentId: commentId}));
+        $("#reply-comment-content-" + commentId).focus();
         $("#reply-comment-submit-" + commentId).click(function (event) {
             event.preventDefault();
             $("#reply-comment-error-text-" + commentId).text("");
@@ -41,10 +44,13 @@ function bindCommentsReply(postId)
             .done(function(result) {
                 if (result.resultCode != 0) {
                     $("#reply-comment-error-text-" + commentId).text("post failed error code " + result.resultCode);
+                    if (result.resultCode == EAUTH) {
+                        window.location.replace("/signin");
+                    }
                     return;
                 }
                 $("#reply-comment-block-" + commentId).empty();
-                loadPostComments(postId);
+                loadPostComments(postId, result.id);
             })
             .fail(function() {
                 $("#reply-comment-error-text-" + commentId).text("HTTP request failed");
@@ -92,7 +98,15 @@ function renderComments(postId, comments)
     }
 }
 
-function loadPostComments(postId)
+function scrollToComment(commentId)
+{
+    console.log("scroll to " + commentId);
+    $("body, html").animate({
+        scrollTop: $("#comment-container-" + commentId).offset().top - 100
+    }, 10);
+}
+
+function loadPostComments(postId, scrollToCommentId)
 {
     $("#post-comments-" + postId).empty();
     getJson("/comments/" + postId, null)
@@ -106,6 +120,8 @@ function loadPostComments(postId)
         renderComments(postId, result.comments);
         fixCommentsContent();
         bindCommentsReply(postId);
+        if (scrollToCommentId >= 0)
+            scrollToComment(scrollToCommentId);
     })
     .fail(function() {
         console.log("get comments failed");
@@ -117,18 +133,22 @@ function bindPostComment(postId) {
         event.preventDefault();
         $("#post-comment-link-" + postId).hide();
         $("#post-comment-block-" + postId).append(Mustache.render(post_comment_template, {postId: postId}));
+        $("#post-comment-content-" + postId).focus();
         $("#post-comment-submit-" + postId).click(function (event) {
             event.preventDefault();
-            $("#post-comment-error-text-" + postId).text("");
+            $("#post-comment-error-text-" + postId).empty();
             postJson("/comment/" + postId, JSON.stringify({ "content": $("#post-comment-content-" + postId).val(),
             "postId" : postId, "parentId" : -1}))
             .done(function(result) {
                 if (result.resultCode != 0) {
                     $("#post-comment-error-text-" + postId).text("post failed error code " + result.resultCode);
+                    if (result.resultCode == EAUTH) {
+                        window.location.replace("/signin");
+                    }
                     return;
                 }
                 $("#post-comment-block-" + postId).empty();
-                loadPostComments(postId);
+                loadPostComments(postId, result.id);
             })
             .fail(function() {
                 $("#post-comment-error-text-" + postId).text("HTTP request failed");
@@ -155,7 +175,7 @@ function onReady()
         reply_comment_template = template;
     });
     var postId = $("#post-id").text();
-    loadPostComments(postId);
+    loadPostComments(postId, -1);
     bindPostComment(postId);
     fixCommentsContent();
     fixPostsContent();

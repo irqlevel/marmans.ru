@@ -6,6 +6,7 @@ function showPostCreateError(errorMessage) {
 function onReady()
 {
     $("#post-create-error").hide();
+    $("#inputTitle").focus();
     $("#post-create-form" ).submit(function( event ) {
         $("#post-create-error").hide();
         event.preventDefault();
