@@ -14,7 +14,7 @@ function renderComment(postId, comment, level)
                     {commentId: comment.commentId, content: comment.content, uid: comment.uid, userName: comment.userName, date: comment.date});
     $("#post-comments-" + postId).append(rendered);
     $("#post-comments-" + postId).append("<hr>");
-    var margin = level*20;
+    var margin = level*15;
     $("#comment-container-" + comment.commentId).css('margin-left', margin + "px");
 
     comment.childs.sort(function(a, b) {
@@ -31,15 +31,15 @@ function bindCommentsReply(postId)
 {
     $(".comment-reply-link").click(function (event) {
         event.preventDefault();
-        console.log("clientY=" + event.clientY);
-        $("#reply-comment-block").empty();
         var id = $(this).attr("id");
         var commentId = parseInt(id.replace(/^comment-reply-link-/, ''));
+        $("#comment-reply-link-" + commentId).hide();
+        $("#reply-comment-block").empty();
         $("#reply-comment-block-" + commentId).append(Mustache.render(reply_comment_template, {commentId: commentId}));
         $("#reply-comment-content-" + commentId).focus();
         $("#reply-comment-submit-" + commentId).click(function (event) {
             event.preventDefault();
-            $("#reply-comment-error-text-" + commentId).text("");
+            $("#reply-comment-error-text-" + commentId).empty();
             postJson("/comment/" + commentId + "/reply", JSON.stringify({ "content": $("#reply-comment-content-" + commentId).val()}))
             .done(function(result) {
                 if (result.resultCode != 0) {
@@ -50,6 +50,7 @@ function bindCommentsReply(postId)
                     return;
                 }
                 $("#reply-comment-block-" + commentId).empty();
+                $("#comment-reply-link-" + commentId).show();
                 loadPostComments(postId, result.id);
             })
             .fail(function() {
@@ -58,6 +59,7 @@ function bindCommentsReply(postId)
         });
         $("#reply-comment-cancel-" + commentId).click(function (event) {
             event.preventDefault();
+            $("#comment-reply-link-" + commentId).show();
             $("#reply-comment-block-" + commentId).empty();
         });
     });
@@ -80,7 +82,7 @@ function renderComments(postId, comments)
         var comment = comments[i];
         if (comment.parentId != -1) {
             if (!commentsMap.has(comment.parentId)) {
-                console.log("no parent!!! " + comment.parentId);
+                console.log("no parent for comment " + comment.parentId);
                 return;
             }
             var parent = commentsMap.get(comment.parentId);
@@ -148,12 +150,12 @@ function bindPostComment(postId) {
                     return;
                 }
                 $("#post-comment-block-" + postId).empty();
+                $("#post-comment-link-" + postId).show();
                 loadPostComments(postId, result.id);
             })
             .fail(function() {
                 $("#post-comment-error-text-" + postId).text("HTTP request failed");
             });
-            $("#post-comment-link-" + postId).show();
         });
         $("#post-comment-cancel-" + postId).click(function (event) {
             event.preventDefault();

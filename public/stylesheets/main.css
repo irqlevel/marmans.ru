@@ -8,18 +8,27 @@ body {
 .error-text {
     color: #D8000C;
 }
-.post-title {
+
+.post-container {
     text-align:left;
 }
+
+.post-title {
+}
+
 .post-content {
-    text-align:left;
     padding: 10px;
     margin: 10px;
 }
+
 .post-link {
-    text-align:left;
+    color: black;
+    font-weight: bold;
 }
-.post-container {
+
+.post-date {
+    font-size : 90%;
+    color : grey;
 }
 
 #post-create-form {
@@ -57,4 +66,26 @@ body {
 
 .post-id {
     display: none;
+}
+
+.comment-content {
+    line-height: 0.5;
+}
+
+.comment-content-text {
+    font-size : 100%;
+}
+
+.comment-author {
+    font-size : 100%;
+    color : black;
+}
+
+.comment-date {
+    font-size : 90%;
+    color : grey;
+}
+
+.comment-reply-link {
+    font-size : 100%;
 }

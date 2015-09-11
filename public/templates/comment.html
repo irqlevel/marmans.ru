@@ -1,8 +1,8 @@
 <div class="comment-container" id="comment-container-{{commentId}}">
     <div class="comment-content">
-        <p class="comment-content-text"><span id="comment-content-text-{{commentId}}">{{content}}</span>
-        by <a href="/profile/{{uid}}">{{userName}}</a> <span class="comment-date">{{date}}</span> <a href="/comment/{{commentId}}/reply" class="comment-reply-link" id="comment-reply-link-{{commentId}}">Reply</a>
-        </p>
+        <p class="comment-author"><a href="/profile/{{uid}}">{{userName}}</a> <span class="comment-date">{{date}}</span></p>
+        <p class="comment-content-text" id="comment-content-text-{{commentId}}">{{content}}</p>
+        <a href="/comment/{{commentId}}/reply" class="comment-reply-link" id="comment-reply-link-{{commentId}}">reply</a>
     </div>
     <div class="reply-comment-block" id="reply-comment-block-{{commentId}}">
     </div>
