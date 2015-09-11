@@ -2,18 +2,15 @@
 
 @content = {
 @for(post <- posts) {
-<div class="post-container">
-<div class="post-title">
-    <p><strong>@post.title</strong> by <a href="/profile/@post.uid">@post.userName</a> <span class="post-date">@post.date</span> </p>
-</div>
-<div class="post-content">
-    <p class="post-content-text">@post.content</p>
-</div>
-<div class="post-link">
-    <a class="btn btn-default" href="/post/@post.postId">Details</a>
-</div>
-</div>
-<hr>
+    <div class="post-container">
+        <div class="post-title">
+            <a class="post-link" href="/post/@post.postId">@post.title</a> <a href="/profile/@post.uid">@post.userName</a> <span class="post-date">@post.date</span>
+        </div>
+        <div class="post-content">
+            <p class="post-content-text">@post.content</p>
+        </div>
+    </div>
+    <hr>
 }
 }
 
