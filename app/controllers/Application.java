@@ -470,4 +470,9 @@ public class Application extends Controller {
             return null;
         return user.getName();
     }
+
+    public Result robots() {
+        Logger.info("robots");
+        return ok(robots.render()).as("text/plain");
+    }
 }
