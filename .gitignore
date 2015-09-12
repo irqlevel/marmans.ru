@@ -16,4 +16,5 @@ dist
 *.log
 *.pyc
 *.patch
+*.pid
 prod_pid

@@ -1,7 +1,7 @@
 <configuration>
 
   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>myapp.log</file>
+    <file>logs/app.log</file>
     <append>true</append>
     <encoder>
       <pattern>%d %level %logger %t - %message%n%xException</pattern>
