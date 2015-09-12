@@ -4,9 +4,10 @@
 
 <mapper namespace="models.mappers.ImageMapper">
     <insert id="insert" parameterType="map">
-        INSERT INTO Images (imageId, uid, title, content, creationTime, url, s3key, s3bucket, width, height)
+        INSERT INTO Images (imageId, uid, title, content, creationTime, url, s3key, s3bucket, width, height,
+                            basename, extension, filesize, type)
         VALUES(#{imageId}, #{uid}, #{title}, #{content}, #{creationTime}, #{url}, #{s3key}, #{s3bucket},
-               #{width}, #{height});
+               #{width}, #{height}, #{basename}, #{extension}, #{filesize}, #{type});
     </insert>
 
     <delete id="delete" parameterType="long">

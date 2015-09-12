@@ -11,13 +11,25 @@
             <div>
                 <form id="profile-form">
                     <div class="form-group">
-                        <label for="inputName">Your name</label>
+                        <label for="inputName">Set your name</label>
                         <input type="text" class="form-control" id="inputName" placeholder="@user.getName()">
                     </div>
                     <button type="submit" class="btn btn-default">Update</button>
                 </form>
                 <div id="profile-error">
                     <p class="error-text" id="profile-error-text"></p>
+                </div>
+            </div>
+            <div>
+                <form id="profile-upload-avatar-form">
+                    <div class="form-group">
+                        <label for="avatarFile">Set your avatar</label>
+                        <input type="file" class="form-control" id="avatarFile">
+                    </div>
+                    <button type="submit" class="btn btn-default">Upload</button>
+                </form>
+                <div id="profile-upload-avatar-error">
+                    <p class="error-text" id="profile-upload-avatar-error-text"></p>
                 </div>
             </div>
         }

@@ -16,6 +16,7 @@ import play.mvc.*;
 import play.Logger;
 import views.html.*;
 
+import java.io.File;
 import java.util.List;
 
 public class Application extends Controller {
@@ -474,5 +475,12 @@ public class Application extends Controller {
     public Result robots() {
         Logger.info("robots");
         return ok(robots.render()).as("text/plain");
+    }
+
+    public Result postAvatar() {
+        Logger.info("post avatar");
+        File file = request().body().asRaw().asFile();
+        Logger.info("file " + file.getAbsolutePath() + " size=" + file.length());
+        return internalServerError();
     }
 }

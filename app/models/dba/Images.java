@@ -4,6 +4,7 @@ import aws.AwsS3;
 import lib.Rng;
 import models.Image;
 import models.mappers.ImageMapper;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.ibatis.session.SqlSession;
 
 import javax.imageio.ImageIO;
@@ -11,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class Images {
+    public static final long IMAGE_TYPE_DEFAULT = 1;
 
     public static Image create(long uid, String title, String content, File file) throws Throwable {
         SqlSession session = null;
@@ -23,6 +25,10 @@ public class Images {
         newImage.s3key = new Rng().genBase64String(16);
         newImage.creationTime = System.currentTimeMillis();
         newImage.imageId = 1000 + new Rng().randInt(1000000);
+        newImage.basename = FilenameUtils.getBaseName(file.getName());
+        newImage.extension = FilenameUtils.getExtension(file.getName());
+        newImage.type = IMAGE_TYPE_DEFAULT;
+        newImage.fileSize = file.length();
 
         try {
             BufferedImage bufferedImage = ImageIO.read(file);
@@ -39,7 +45,9 @@ public class Images {
             session = Db.getSession();
             ImageMapper mapper = session.getMapper(ImageMapper.class);
             mapper.insert(newImage.imageId, newImage.uid, newImage.title, newImage.content, newImage.creationTime,
-                          newImage.url, newImage.s3bucket, newImage.s3key, newImage.width, newImage.height);
+                          newImage.url, newImage.s3bucket, newImage.s3key, newImage.width, newImage.height,
+                          newImage.basename, newImage.extension, newImage.fileSize, newImage.type);
+
             session.commit();
             image = newImage;
         } finally {
