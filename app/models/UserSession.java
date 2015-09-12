@@ -1,5 +1,7 @@
 package models;
 
+import lib.Rng;
+
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -38,20 +40,13 @@ public class UserSession {
         this.expires = expires;
     }
 
-    private static String genBase64String(int bytes) {
-        SecureRandom rng = new SecureRandom();
-        byte[] rndBytes = new byte[bytes];
-        rng.nextBytes(rndBytes);
-        return Base64.getEncoder().encodeToString(rndBytes);
-    }
-
     public static UserSession genSession(long uid, long expires) {
         UserSession session = new UserSession();
 
         session.setExpires(System.currentTimeMillis() + expires);
         session.setUid(uid);
-        session.setValue(genBase64String(16));
-        session.setCsrfToken(genBase64String(16));
+        session.setValue(new Rng().genBase64String(16));
+        session.setCsrfToken(new Rng().genBase64String(16));
         return session;
     }
 }

@@ -13,7 +13,10 @@ libraryDependencies ++= Seq(
   javaJdbc,
   "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
   "org.mybatis" % "mybatis" % "3.3.0",
-  "com.google.code.gson" % "gson" % "2.3.1"
+  "com.google.code.gson" % "gson" % "2.3.1",
+  "com.amazonaws" % "aws-java-sdk-s3" % "1.10.17",
+  "com.amazonaws" % "aws-java-sdk-core" % "1.10.17",
+  "commons-io" % "commons-io" % "2.4"
 )
 
 // Add app folder as resource directory so that mapper xml files are in the classpath

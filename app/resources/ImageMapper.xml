@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="models.mappers.ImageMapper">
+    <insert id="insert" parameterType="map">
+        INSERT INTO Images (imageId, uid, title, content, creationTime, url, s3key, s3bucket, width, height)
+        VALUES(#{imageId}, #{uid}, #{title}, #{content}, #{creationTime}, #{url}, #{s3key}, #{s3bucket},
+               #{width}, #{height});
+    </insert>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM Images WHERE imageId = #{imageId};
+    </delete>
+
+    <select id="get" parameterType="long" resultType="models.Image">
+        SELECT * FROM Images WHERE imageId = #{imageId};
+    </select>
+</mapper>

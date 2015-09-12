@@ -2,6 +2,7 @@ package lib;
 
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
+import java.util.Base64;
 
 public class Rng {
     private SecureRandom rng = new SecureRandom();
@@ -88,5 +89,12 @@ public class Rng {
 
         while ((v = rand5()) >= 3);
         return v;
+    }
+
+    public String genBase64String(int bytes) {
+        SecureRandom rng = new SecureRandom();
+        byte[] rndBytes = new byte[bytes];
+        rng.nextBytes(rndBytes);
+        return Base64.getEncoder().encodeToString(rndBytes);
     }
 }
