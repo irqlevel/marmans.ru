@@ -7,8 +7,17 @@
         UPDATE Users SET name = #{name} WHERE uid = #{uid};
     </update>
 
+    <update id="updateAvatar" parameterType="map">
+        UPDATE Users SET avatarId = #{avatarId} WHERE uid = #{uid};
+    </update>
+
+    <update id="updateThumbnail" parameterType="map">
+        UPDATE Users SET thumbnailId = #{thumbnailId} WHERE uid = #{uid};
+    </update>
+
     <insert id="insert" parameterType="map">
-        INSERT INTO Users (uid, name, email, hashp) VALUES(#{uid}, #{name}, #{email}, #{hashp});
+        INSERT INTO Users (uid, name, email, hashp, avatarId, thumbnailId)
+        VALUES(#{uid}, #{name}, #{email}, #{hashp}, #{avatarId}, #{thumbnailId});
     </insert>
 
     <delete id="delete" parameterType="long">

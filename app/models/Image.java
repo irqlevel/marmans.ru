@@ -14,10 +14,11 @@ public class Image {
     public long height = -1;
     public String s3key = null;
     public String s3bucket = null;
-    public String basename = null;
-    public String extension = null;
+    public String fileBaseName = null;
+    public String fileExtension = null;
     public long fileSize = -1;
-    public long type = -1;
+    public String fileType = null;
+    public String fileName = null;
 
     public ObjectNode toJson() {
         ObjectNode json = Json.newObject();
@@ -29,10 +30,11 @@ public class Image {
         json.put("url", url);
         json.put("width", width);
         json.put("height", height);
-        json.put("basename", basename);
-        json.put("extension", extension);
-        json.put("type", type);
+        json.put("fileBaseName", fileBaseName);
+        json.put("fileExtension", fileExtension);
+        json.put("fileType", fileType);
         json.put("fileSize", fileSize);
+        json.put("fileName", fileName);
         return json;
     }
 }

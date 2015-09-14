@@ -4,8 +4,8 @@
 
 <mapper namespace="models.mappers.PostMapper">
     <insert id="insert" parameterType="map">
-        INSERT INTO Posts (postId, uid, title, content, creationTime)
-        VALUES(#{postId}, #{uid}, #{title}, #{content}, #{creationTime});
+        INSERT INTO Posts (postId, uid, title, content, creationTime, imageId)
+        VALUES(#{postId}, #{uid}, #{title}, #{content}, #{creationTime}, #{imageId});
     </insert>
 
     <delete id="delete" parameterType="long">

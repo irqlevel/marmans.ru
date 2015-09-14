@@ -5,9 +5,9 @@
 <mapper namespace="models.mappers.ImageMapper">
     <insert id="insert" parameterType="map">
         INSERT INTO Images (imageId, uid, title, content, creationTime, url, s3key, s3bucket, width, height,
-                            basename, extension, filesize, type)
+                            fileName, fileBaseName, fileExtension, fileSize, fileType)
         VALUES(#{imageId}, #{uid}, #{title}, #{content}, #{creationTime}, #{url}, #{s3key}, #{s3bucket},
-               #{width}, #{height}, #{basename}, #{extension}, #{filesize}, #{type});
+               #{width}, #{height}, #{fileName}, #{fileBaseName}, #{fileExtension}, #{fileSize}, #{fileType});
     </insert>
 
     <delete id="delete" parameterType="long">

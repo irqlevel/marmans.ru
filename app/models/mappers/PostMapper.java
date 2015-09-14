@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface PostMapper {
     public void insert(@Param("postId") Long postId, @Param("uid") Long uid, @Param("title") String title,
-                       @Param("content") String content, @Param("creationTime") Long creationTime);
+                       @Param("content") String content, @Param("creationTime") Long creationTime,
+                       @Param("imageId") Long imageId);
 
     public Post get(Long postId);
     public List<Post> getLatest(@Param("offset") Long offset, @Param("limit") Long limit);

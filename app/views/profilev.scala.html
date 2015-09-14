@@ -2,17 +2,20 @@
 
 @content = {
     <div id="profile-container">
-        <h3>uid @user.getUid() email @user.getEmail() name @user.getName()</h3>
-        @if((userAuth.user != null) && (userAuth.user.getUid() == user.getUid())) {
-            <a class="btn btn-default" id="signout" href="/signout">Sign out</a>
+        @if(user.avatarUrl != null) {
+            <img src="@user.avatarUrl"><br>
+        }
+        <h3>uid @user.uid email @user.email name @user.name </h3>
+        @if((userAuth.user != null) && (userAuth.user.uid == user.uid)) {
+            <a class="btn btn-default" id="signout" href="/signout">Sign out</a><br>
         }
 
-        @if((userAuth.user != null) && (userAuth.user.getUid() == user.getUid())) {
+        @if((userAuth.user != null) && (userAuth.user.uid == user.uid)) {
             <div>
                 <form id="profile-form">
                     <div class="form-group">
                         <label for="inputName">Set your name</label>
-                        <input type="text" class="form-control" id="inputName" placeholder="@user.getName()">
+                        <input type="text" class="form-control" id="inputName" placeholder="@user.name">
                     </div>
                     <button type="submit" class="btn btn-default">Update</button>
                 </form>

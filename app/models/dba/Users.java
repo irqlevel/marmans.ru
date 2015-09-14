@@ -6,32 +6,23 @@ import models.User;
 import models.mappers.UserMapper;
 import org.apache.ibatis.session.SqlSession;
 
-import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.List;
 
 public class Users {
-
-    private static String genRndString() {
-        SecureRandom rng = new SecureRandom();
-        byte[] rndBytes = new byte[16];
-        rng.nextBytes(rndBytes);
-        return Base64.getEncoder().encodeToString(rndBytes);
-    }
 
     public static User join(String email, String password) {
         SqlSession session = null;
 
         User newUser = new User(), user = null;
-        newUser.setEmail(email);
-        newUser.setUid(1000 + new Rng().randInt(1000000));
-        newUser.setName(email);
-        newUser.setHashp(BCrypt.hashpw(password, BCrypt.gensalt()));
+        newUser.email = email;
+        newUser.uid = 1000 + new Rng().randInt(1000000);
+        newUser.name = email;
+        newUser.hashp = BCrypt.hashpw(password, BCrypt.gensalt());
 
         try {
             session = Db.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
-            mapper.insert(newUser.getUid(), newUser.getName(), newUser.getEmail(), newUser.getHashp());
+            mapper.insert(newUser.uid, newUser.name, newUser.email, newUser.hashp, newUser.avatarId, newUser.thumbnailId);
             session.commit();
             user = newUser;
         } finally {
@@ -50,6 +41,38 @@ public class Users {
             session = Db.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
             mapper.updateName(uid, name);
+            session.commit();
+            result = true;
+        } finally {
+            if (session != null)
+                session.close();
+        }
+        return result;
+    }
+
+    public static boolean updateAvatar(long uid, long avatarId) {
+        SqlSession session = null;
+        boolean result = false;
+        try {
+            session = Db.getSession();
+            UserMapper mapper = session.getMapper(UserMapper.class);
+            mapper.updateAvatar(uid, avatarId);
+            session.commit();
+            result = true;
+        } finally {
+            if (session != null)
+                session.close();
+        }
+        return result;
+    }
+
+    public static boolean updateThumbnail(long uid, long thumbnailId) {
+        SqlSession session = null;
+        boolean result = false;
+        try {
+            session = Db.getSession();
+            UserMapper mapper = session.getMapper(UserMapper.class);
+            mapper.updateThumbnail(uid, thumbnailId);
             session.commit();
             result = true;
         } finally {
@@ -81,29 +104,6 @@ public class Users {
             session = Db.getSession();
             UserMapper mapper = session.getMapper(UserMapper.class);
             user = mapper.get(uid);
-        } finally {
-            if (session != null)
-                session.close();
-        }
-
-        return user;
-    }
-
-    public static User create() {
-        SqlSession session = null;
-
-        User user = null;
-        User newUser = new User();
-        newUser.setEmail(genRndString());
-        newUser.setUid(new Rng().nextLong());
-        newUser.setName(genRndString());
-
-        try {
-            session = Db.getSession();
-            UserMapper mapper = session.getMapper(UserMapper.class);
-            mapper.insert(newUser.getUid(), newUser.getName(), newUser.getEmail(), genRndString());
-            session.commit();
-            user = newUser;
         } finally {
             if (session != null)
                 session.close();

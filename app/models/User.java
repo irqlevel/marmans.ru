@@ -1,37 +1,29 @@
 package models;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import play.libs.Json;
+
 public class User {
-    private long uid = -1;
-    private String name = null;
-    private String email = null;
-    private String hashp = null;
+    public long uid = -1;
+    public String name = null;
+    public String email = null;
+    public String hashp = null;
+    public long avatarId = -1;
+    public long thumbnailId = -1;
+    public String avatarUrl = null;
+    public String thumbnailUrl = null;
 
-    public long getUid() {
-        return uid;
+    public ObjectNode toJson() {
+        ObjectNode json = Json.newObject();
+        json.put("uid", uid);
+        json.put("name", name);
+        json.put("email", email);
+        json.put("hashp", hashp);
+        json.put("avatarId", avatarId);
+        json.put("thumbnailId", thumbnailId);
+        json.put("avatarUrl", avatarUrl);
+        json.put("thumbnailUrl", thumbnailUrl);
+        return json;
     }
-
-    public void setUid(long uid) {
-        this.uid = uid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getHashp() { return hashp;}
-
-    public void setHashp(String hashp) { this.hashp = hashp;}
 }
 

@@ -23,7 +23,7 @@ public class Posts {
         try {
             session = Db.getSession();
             PostMapper mapper = session.getMapper(PostMapper.class);
-            mapper.insert(newPost.postId, newPost.uid, newPost.title, newPost.content, newPost.creationTime);
+            mapper.insert(newPost.postId, newPost.uid, newPost.title, newPost.content, newPost.creationTime, newPost.imageId);
             session.commit();
             post = newPost;
         } finally {

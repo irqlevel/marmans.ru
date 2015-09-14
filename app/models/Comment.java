@@ -12,6 +12,8 @@ public class Comment {
     public String content = null;
     public String userName = null;
     public String date = null;
+    public long imageId = -1;
+
     public ObjectNode toJson() {
         ObjectNode json = Json.newObject();
         json.put("uid", uid);
@@ -22,6 +24,7 @@ public class Comment {
         json.put("creationTime", creationTime);
         json.put("userName", userName);
         json.put("date", date);
+        json.put("imageId", imageId);
         return json;
     }
 }

@@ -10,14 +10,20 @@
             <th>Uid</th>
             <th>Email</th>
             <th>Name</th>
+            <th>Thumbnail</th>
         </tr>
     </thead>
     <tbody>
         @for(user <- users) {
         <tr align="left">
-            <td><a href="/profile/@user.getUid()">@user.getUid()</a></td>
-            <td>@user.getEmail()</td>
-            <td>@user.getName()</td>
+            <td><a href="/profile/@user.uid">@user.uid</a></td>
+            <td>@user.email</td>
+            <td>@user.name</td>
+            <td>
+                @if(user.thumbnailUrl != null) {
+                    <img src="@user.thumbnailUrl">
+                }
+            </td>
         </tr>
         }
     </tbody>

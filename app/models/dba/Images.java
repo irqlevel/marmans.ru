@@ -6,15 +6,24 @@ import models.Image;
 import models.mappers.ImageMapper;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.ibatis.session.SqlSession;
+import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URLEncoder;
 
 public class Images {
     public static final long IMAGE_TYPE_DEFAULT = 1;
 
-    public static Image create(long uid, String title, String content, File file, String fileName) throws Throwable {
+    public static void resizeImageFile(File file, int width, int height) throws Exception {
+        BufferedImage src = ImageIO.read(file);
+        BufferedImage dst = Scalr.resize(src, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, width, height, Scalr.OP_ANTIALIAS);
+        ImageIO.write(dst, "jpg", file);
+    }
+
+    public static Image create(long uid, String title, String content, File file, String fileName, String fileType)
+                                throws Throwable {
         SqlSession session = null;
 
         Image newImage = new Image(), image = null;
@@ -22,12 +31,14 @@ public class Images {
         newImage.title = title;
         newImage.content = content;
         newImage.s3bucket = AwsS3.imagesBucketName;
-        newImage.basename = FilenameUtils.getBaseName(fileName);
-        newImage.extension = FilenameUtils.getExtension(fileName);
-        newImage.s3key = new Rng().genBase64UrlString(16) + "_" + newImage.basename + "." + newImage.extension;
+        newImage.fileName = fileName;
+        newImage.fileBaseName = FilenameUtils.getBaseName(fileName);
+        newImage.fileExtension = FilenameUtils.getExtension(fileName);
+        newImage.s3key = new Rng().genBase64UrlString(16) +
+                            URLEncoder.encode(newImage.fileBaseName + "." + newImage.fileExtension, "UTF-8");
         newImage.creationTime = System.currentTimeMillis();
         newImage.imageId = 1000 + new Rng().randInt(1000000);
-        newImage.type = IMAGE_TYPE_DEFAULT;
+        newImage.fileType = fileType;
         newImage.fileSize = file.length();
 
         try {
@@ -46,7 +57,7 @@ public class Images {
             ImageMapper mapper = session.getMapper(ImageMapper.class);
             mapper.insert(newImage.imageId, newImage.uid, newImage.title, newImage.content, newImage.creationTime,
                           newImage.url, newImage.s3bucket, newImage.s3key, newImage.width, newImage.height,
-                          newImage.basename, newImage.extension, newImage.fileSize, newImage.type);
+                          newImage.fileName, newImage.fileBaseName, newImage.fileExtension, newImage.fileSize, newImage.fileType);
 
             session.commit();
             image = newImage;

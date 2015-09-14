@@ -4,8 +4,8 @@
 
 <mapper namespace="models.mappers.CommentMapper">
     <insert id="insert" parameterType="map">
-        INSERT INTO Comments (commentId, postId, uid, parentId, content, creationTime)
-        VALUES(#{commentId}, #{postId}, #{uid}, #{parentId}, #{content}, #{creationTime});
+        INSERT INTO Comments (commentId, postId, uid, parentId, content, creationTime, imageId)
+        VALUES(#{commentId}, #{postId}, #{uid}, #{parentId}, #{content}, #{creationTime}, #{imageId});
     </insert>
 
     <delete id="delete" parameterType="long">

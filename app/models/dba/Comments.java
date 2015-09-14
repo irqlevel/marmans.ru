@@ -52,7 +52,7 @@ public class Comments {
             session = Db.getSession();
             CommentMapper mapper = session.getMapper(CommentMapper.class);
             mapper.insert(newComment.postId, newComment.commentId, newComment.content,
-                          newComment.creationTime, newComment.uid, newComment.parentId);
+                          newComment.creationTime, newComment.uid, newComment.parentId, newComment.imageId);
             session.commit();
             comment = newComment;
         } finally {
