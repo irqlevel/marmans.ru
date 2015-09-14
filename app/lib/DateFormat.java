@@ -40,9 +40,9 @@ public class DateFormat {
                     return prefix;
                 }
             }
-            return prefix + " " + date.getDayOfMonth() + " " + monthMap.get(date.getDayOfMonth());
+            return prefix + " " + date.getDayOfMonth() + " " + monthMap.get(date.getMonthOfYear());
         } else {
-            return prefix + " " + date.getDayOfMonth() + " " + monthMap.get(date.getDayOfMonth()) + " " + date.getYear();
+            return prefix + " " + date.getDayOfMonth() + " " + monthMap.get(date.getMonthOfYear()) + " " + date.getYear();
         }
     }
 }
