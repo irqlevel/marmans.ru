@@ -45,8 +45,8 @@ public class UserSession {
 
         session.setExpires(System.currentTimeMillis() + expires);
         session.setUid(uid);
-        session.setValue(new Rng().genBase64String(16));
-        session.setCsrfToken(new Rng().genBase64String(16));
+        session.setValue(new Rng().genBase64UrlString(16));
+        session.setCsrfToken(new Rng().genBase64UrlString(16));
         return session;
     }
 }

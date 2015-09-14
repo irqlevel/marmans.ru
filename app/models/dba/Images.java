@@ -14,7 +14,7 @@ import java.io.File;
 public class Images {
     public static final long IMAGE_TYPE_DEFAULT = 1;
 
-    public static Image create(long uid, String title, String content, File file) throws Throwable {
+    public static Image create(long uid, String title, String content, File file, String fileName) throws Throwable {
         SqlSession session = null;
 
         Image newImage = new Image(), image = null;
@@ -22,11 +22,11 @@ public class Images {
         newImage.title = title;
         newImage.content = content;
         newImage.s3bucket = AwsS3.imagesBucketName;
-        newImage.s3key = new Rng().genBase64String(16);
+        newImage.basename = FilenameUtils.getBaseName(fileName);
+        newImage.extension = FilenameUtils.getExtension(fileName);
+        newImage.s3key = new Rng().genBase64UrlString(16) + "_" + newImage.basename + "." + newImage.extension;
         newImage.creationTime = System.currentTimeMillis();
         newImage.imageId = 1000 + new Rng().randInt(1000000);
-        newImage.basename = FilenameUtils.getBaseName(file.getName());
-        newImage.extension = FilenameUtils.getExtension(file.getName());
         newImage.type = IMAGE_TYPE_DEFAULT;
         newImage.fileSize = file.length();
 
@@ -38,7 +38,7 @@ public class Images {
             AwsS3 awsS3 = new AwsS3();
             if (!awsS3.putFile(newImage.s3bucket, newImage.s3key, file))
                 return null;
-            newImage.url = awsS3.generateUrl(newImage.s3bucket, newImage.s3key);
+            newImage.url = awsS3.getUrl(newImage.s3bucket, newImage.s3key);
             if (newImage.url == null) {
                 awsS3.deleteFile(newImage.s3bucket, newImage.s3key);
             }

@@ -14,6 +14,7 @@ public class AwsS3 {
     private AmazonS3Client client = null;
     private static String accessKeyId = "AKIAIO244G3G3GH7GL5Q";
     private static String secretKey = "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";
+    private static String endPoint = "https://s3.eu-central-1.amazonaws.com";
     public static final String imagesBucketName = "marmans.ru.images";
 
     public AwsS3() {
@@ -25,12 +26,13 @@ public class AwsS3 {
                 return secretKey;
             }
         });
+        client.setEndpoint(endPoint);
     }
 
     public boolean putFile(String bucketName, String key, File srcFile) {
         boolean result = false;
         try {
-            client.putObject(new PutObjectRequest(bucketName, key, srcFile));
+            client.putObject(new PutObjectRequest(bucketName, key, srcFile).withCannedAcl(CannedAccessControlList.PublicRead));
             result = true;
         } finally {
 
@@ -49,16 +51,8 @@ public class AwsS3 {
         return result;
     }
 
-    public String generateUrl(String bucketName, String key) {
-        URL url = null;
-        try {
-            GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, key, HttpMethod.GET);
-            request.setExpiration(new Date(Long.MAX_VALUE));
-            url = client.generatePresignedUrl(request);
-        } finally {
-
-        }
-        return (url != null) ? url.toString() : null;
+    public String getUrl(String bucketName, String key) {
+        return endPoint + "/" + bucketName + "/" + key;
     }
 
     public boolean deleteFile(String bucketName, String key) {

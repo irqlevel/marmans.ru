@@ -7,10 +7,7 @@ import lib.BCrypt;
 import lib.DateFormat;
 import models.*;
 
-import models.dba.Comments;
-import models.dba.Posts;
-import models.dba.UserSessions;
-import models.dba.Users;
+import models.dba.*;
 import play.libs.F.*;
 import play.mvc.*;
 import play.Logger;
@@ -319,8 +316,10 @@ public class Application extends Controller {
     private PostResult postJob(long postId) {
         PostResult result = new PostResult();
         result.post = Posts.get(postId);
-        result.post.userName = uidToUserName(result.post.uid);
-        result.post.date = DateFormat.timeToString(result.post.creationTime);
+        if (result.post != null) {
+            result.post.userName = uidToUserName(result.post.uid);
+            result.post.date = DateFormat.timeToString(result.post.creationTime);
+        }
         result.userAuth = currUserAuth();
         return result;
     }
@@ -328,7 +327,7 @@ public class Application extends Controller {
     public Promise<Result> post(long postId) {
         Logger.info("post " + postId);
         Promise<PostResult> promise = Promise.promise(() -> postJob(postId));
-        return promise.map(val -> ok(postv.render(val.userAuth, val.post)));
+        return promise.map(val -> (val.post != null) ? ok(postv.render(val.userAuth, val.post)) : notFound());
     }
 
     private AppPosts latestPostsJob(long offset, long limit) {
@@ -477,10 +476,37 @@ public class Application extends Controller {
         return ok(robots.render()).as("text/plain");
     }
 
-    public Result postAvatar() {
+    private AppResult postAvatarJob() {
+        File file = null;
+        Image image = null;
+        try {
+            Logger.info("post avatar job");
+            UserAuth userAuth = postUserAuth();
+            if (userAuth == null)
+                throw new AppException(AppResult.EAUTH);
+
+            file = request().body().asRaw().asFile();
+            String fileName = request().getHeader("X-File-Name");
+            Logger.info("file is " + file.getAbsolutePath() + " length=" + file.length());
+            image = Images.create(userAuth.user.getUid(), "avatar", "avatar", file, fileName);
+            Logger.info("image created url=" + image.url + " imageId=" + image.imageId);
+            AppResult result =  AppResult.success();
+            result.id = image.imageId;
+            return result;
+        } catch (AppException e) {
+            return e.getResult();
+        } catch (Throwable e) {
+            Logger.error("exception", e);
+            return AppResult.error(AppResult.EEXCEPT);
+        } finally {
+            if (file != null)
+                file.delete();
+        }
+    }
+
+    public Promise<Result> postAvatar() {
         Logger.info("post avatar");
-        File file = request().body().asRaw().asFile();
-        Logger.info("file " + file.getAbsolutePath() + " size=" + file.length());
-        return internalServerError();
+        Promise<AppResult> promise = Promise.promise(() -> postAvatarJob());
+        return promise.map(val -> ok(val.toJson()));
     }
 }

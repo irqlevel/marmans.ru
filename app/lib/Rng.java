@@ -91,10 +91,10 @@ public class Rng {
         return v;
     }
 
-    public String genBase64String(int bytes) {
+    public String genBase64UrlString(int bytes) {
         SecureRandom rng = new SecureRandom();
         byte[] rndBytes = new byte[bytes];
         rng.nextBytes(rndBytes);
-        return Base64.getEncoder().encodeToString(rndBytes);
+        return Base64.getUrlEncoder().encodeToString(rndBytes);
     }
 }
