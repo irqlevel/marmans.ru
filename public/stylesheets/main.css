@@ -88,3 +88,7 @@ body {
 .comment-reply-link {
     font-size : 100%;
 }
+
+.user_avatar {
+    width: 200px;
+}

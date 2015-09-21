@@ -14,14 +14,6 @@ import java.io.File;
 import java.net.URLEncoder;
 
 public class Images {
-    public static final long IMAGE_TYPE_DEFAULT = 1;
-
-    public static void resizeImageFile(File file, int width, int height) throws Exception {
-        BufferedImage src = ImageIO.read(file);
-        BufferedImage dst = Scalr.resize(src, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, width, height, Scalr.OP_ANTIALIAS);
-        ImageIO.write(dst, "jpg", file);
-    }
-
     public static Image create(long uid, String title, String content, File file, String fileName, String fileType)
                                 throws Throwable {
         SqlSession session = null;

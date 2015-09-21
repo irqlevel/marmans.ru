@@ -509,8 +509,8 @@ public class Application extends Controller {
             Logger.info("file is " + file.getAbsolutePath() + " length=" + file.length());
 
             BufferedImage srcImg = ImageIO.read(file);
-            BufferedImage avatarImg = Scalr.resize(srcImg, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, 300, 200, Scalr.OP_ANTIALIAS);
-            BufferedImage thumbnailImg = Scalr.resize(srcImg, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, 64, Scalr.OP_ANTIALIAS);
+            BufferedImage avatarImg = Scalr.resize(srcImg, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH, 200, Scalr.OP_ANTIALIAS);
+            BufferedImage thumbnailImg = Scalr.resize(srcImg, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH, 64, Scalr.OP_ANTIALIAS);
 
             ImageIO.write(avatarImg, "jpg", file);
             avatar = Images.create(user.uid, "avatar", "avatar", file, fileName, fileType);

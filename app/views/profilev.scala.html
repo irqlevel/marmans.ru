@@ -3,7 +3,9 @@
 @content = {
     <div id="profile-container">
         @if(user.avatarUrl != null) {
-            <img src="@user.avatarUrl"><br>
+            <img class="user_avatar" src="@user.avatarUrl"><br>
+        } else {
+            <img class="user_avatar" src="@routes.Assets.versioned("images/blank_avatar.jpg")"><br>
         }
         <h3>uid @user.uid email @user.email name @user.name </h3>
         @if((userAuth.user != null) && (userAuth.user.uid == user.uid)) {
