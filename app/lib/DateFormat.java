@@ -14,18 +14,18 @@ public class DateFormat {
     private static HashMap<Integer, String> monthMap = new HashMap<Integer, String>();
 
     static {
-        monthMap.put(0, "Jan");
-        monthMap.put(1, "Feb");
-        monthMap.put(2, "Mar");
-        monthMap.put(3, "Apr");
-        monthMap.put(4, "May");
-        monthMap.put(5, "Jun");
-        monthMap.put(6, "Jul");
-        monthMap.put(7, "Aug");
-        monthMap.put(8, "Sep");
-        monthMap.put(9, "Oct");
-        monthMap.put(10, "Nov");
-        monthMap.put(11, "Dec");
+        monthMap.put(1, "Jan");
+        monthMap.put(2, "Feb");
+        monthMap.put(3, "Mar");
+        monthMap.put(4, "Apr");
+        monthMap.put(5, "May");
+        monthMap.put(6, "Jun");
+        monthMap.put(7, "Jul");
+        monthMap.put(8, "Aug");
+        monthMap.put(9, "Sep");
+        monthMap.put(10, "Oct");
+        monthMap.put(11, "Nov");
+        monthMap.put(12, "Dec");
     }
 
     public static String timeToString(long time) {
