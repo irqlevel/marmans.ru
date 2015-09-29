@@ -11,7 +11,7 @@ function fixCommentsContent() {
 function renderComment(postId, comment, level)
 {
     var rendered = Mustache.render(comment_template,
-                    {commentId: comment.commentId, content: comment.content, uid: comment.uid, userName: comment.userName, date: comment.date});
+                    {commentId: comment.commentId, content: comment.content, uid: comment.uid, userName: comment.userName, userPicUrl: comment.userPicUrl, date: comment.date});
     $("#post-comments-" + postId).append(rendered);
     $("#post-comments-" + postId).append("<hr>");
     var margin = level*15;

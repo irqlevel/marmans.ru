@@ -12,6 +12,8 @@ public class Post {
     public String userName = null;
     public String date = null;
     public long imageId = -1;
+    public String imageUrl = null;
+    public String userPicUrl = null;
 
     public ObjectNode toJson() {
         ObjectNode json = Json.newObject();
@@ -23,6 +25,8 @@ public class Post {
         json.put("userName", userName);
         json.put("date", date);
         json.put("imageId", imageId);
+        json.put("imageUrl", imageUrl);
+        json.put("userPicUrl", userPicUrl);
         return json;
     }
 }

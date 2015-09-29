@@ -47,15 +47,6 @@ function onReady()
 {
     $("#profile-error").hide();
     $("#profile-upload-avatar-error").hide();
-    $("#signout" ).click(function( event ) {
-        event.preventDefault();
-        postJson("/signout", "{}")
-        .done(function(result) {
-                window.location.replace("/");
-        })
-        .fail(function() {
-        });
-    });
     $("#profile-form" ).submit(function( event ) {
         $("#profile-error").hide();
         event.preventDefault();

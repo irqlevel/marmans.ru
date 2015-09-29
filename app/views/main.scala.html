@@ -24,16 +24,27 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="/">Marmans</a>
-                    @if(userAuth.user == null) {
-                    <a class="navbar-brand" href="/join">Join</a>
-                    <a class="navbar-brand" href="/signin">Sign in</a>
-                    }
-                    @if(userAuth.user != null) {
-                    <a class="navbar-brand" href="/profile">Profile</a>
-                    <a class="navbar-brand" href="/post/create">Post</a>
-                    }
-                    <a class="navbar-brand" href="/posts">Posts</a>
-                    <a class="navbar-brand" href="/users">Users</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="ropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Profile <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                @if(userAuth.user == null) {
+                                <li><a href="/signin">Sign in</a></li>
+                                <li><a href="/join">Join</a></li>
+                                } else {
+                                <li><a href="/profile">My page</a></li>
+                                <li><a href="#" id="signout">Sign out</a></li>
+                                }
+                            </ul>
+                        </li>
+                        @if(userAuth.user != null) {
+                        <li><a href="/post/create">Post</a></li>
+                        }
+                        <li><a href="/posts">Posts</a></li>
+                        <li><a href="/users">Users</a></li>
+                    </ul>
                 </div>
             </div>
         </nav>

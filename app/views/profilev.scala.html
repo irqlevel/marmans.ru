@@ -2,21 +2,19 @@
 
 @content = {
     <div id="profile-container">
+        <h3>uid @user.uid email @user.email name @user.name </h3>
+
         @if(user.avatarUrl != null) {
             <img class="user_avatar" src="@user.avatarUrl"><br>
         } else {
             <img class="user_avatar" src="@routes.Assets.versioned("images/blank_avatar.jpg")"><br>
         }
-        <h3>uid @user.uid email @user.email name @user.name </h3>
-        @if((userAuth.user != null) && (userAuth.user.uid == user.uid)) {
-            <a class="btn btn-default" id="signout" href="/signout">Sign out</a><br>
-        }
 
         @if((userAuth.user != null) && (userAuth.user.uid == user.uid)) {
-            <div>
+            <div class="profile-editable-item">
                 <form id="profile-form">
                     <div class="form-group">
-                        <label for="inputName">Set your name</label>
+                        <label for="inputName">Edit your name</label>
                         <input type="text" class="form-control" id="inputName" placeholder="@user.name">
                     </div>
                     <button type="submit" class="btn btn-default">Update</button>
@@ -25,10 +23,10 @@
                     <p class="error-text" id="profile-error-text"></p>
                 </div>
             </div>
-            <div>
+            <div class="profile-editable-item">
                 <form id="profile-upload-avatar-form">
                     <div class="form-group">
-                        <label for="avatarFile">Set your avatar</label>
+                        <label for="avatarFile">Edit your avatar</label>
                         <input type="file" class="form-control" id="avatarFile">
                     </div>
                     <button type="submit" class="btn btn-default">Upload</button>

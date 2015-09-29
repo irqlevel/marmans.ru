@@ -51,5 +51,14 @@ function onReady()
 {
     csrfToken = $("#csrfToken").text();
     currUserUid = parseInt($("#currUserUid").text());
+    $("#signout" ).click(function( event ) {
+        event.preventDefault();
+        postJson("/signout", "{}")
+        .done(function(result) {
+                window.location.replace("/");
+        })
+        .fail(function() {
+        });
+    });
 }
 $(document).ready(onReady);

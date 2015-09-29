@@ -92,3 +92,11 @@ body {
 .user_avatar {
     width: 200px;
 }
+
+.profile-editable-item {
+    margin: 10px;
+}
+
+.user_pic {
+    width: 64px;
+}

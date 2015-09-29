@@ -31,7 +31,7 @@ public class Application extends Controller {
         UsersResult result = new UsersResult();
         result.users = Users.getAll();
         for (User user : result.users) {
-            userWithAvatar(user);
+            userResolveAvatar(user);
         }
         result.userAuth = currUserAuth();
         return result;
@@ -192,7 +192,7 @@ public class Application extends Controller {
         return result;
     }
 
-    private User userWithAvatar(User user) {
+    private User userResolveAvatar(User user) {
         Image avatar = Images.get(user.avatarId);
         if (avatar != null)
             user.avatarUrl = avatar.url;
@@ -207,7 +207,7 @@ public class Application extends Controller {
         Logger.info("profile uid=" + uid);
         Promise<ProfileResult> promise = Promise.promise(() -> profileJob(uid));
         return promise.map(result -> (result.user != null) ?
-                ok(profilev.render(result.userAuth, userWithAvatar(result.user))) : notFound());
+                ok(profilev.render(result.userAuth, userResolveAvatar(result.user))) : notFound());
     }
 
     private UserAuth postUserAuth() {
@@ -259,7 +259,7 @@ public class Application extends Controller {
 
         Promise<UserAuth> promise = Promise.promise(() -> currUserAuth());
         return promise.map(userAuth -> (userAuth.user == null) ? redirect(controllers.routes.Application.signin()) :
-                ok(profilev.render(userAuth, userWithAvatar(userAuth.user))));
+                ok(profilev.render(userAuth, userResolveAvatar(userAuth.user))));
     }
 
     public Promise<Result> postCreate() {
@@ -312,11 +312,28 @@ public class Application extends Controller {
         return promise.map(val -> ok(val.toJson()));
     }
 
+    private User uidToUser(long uid) {
+        User user = Users.get(uid);
+        if (user == null)
+            return null;
+
+        Image avatar = Images.get(user.avatarId);
+        if (avatar != null)
+            user.avatarUrl = avatar.url;
+
+        Image thumbnail = Images.get(user.thumbnailId);
+        if (thumbnail != null)
+            user.thumbnailUrl = thumbnail.url;
+        return user;
+    }
+
     private PostsResult postsJob() {
         PostsResult result = new PostsResult();
         List<Post> posts = Posts.getAll();
         for (Post post: posts) {
-            post.userName = uidToUserName(post.uid);
+            User user = uidToUser(post.uid);
+            post.userName = user.name;
+            post.userPicUrl = user.thumbnailUrl;
             post.date = DateFormat.timeToString(post.creationTime);
         }
         result.posts = posts;
@@ -334,7 +351,9 @@ public class Application extends Controller {
         PostResult result = new PostResult();
         result.post = Posts.get(postId);
         if (result.post != null) {
-            result.post.userName = uidToUserName(result.post.uid);
+            User user = uidToUser(result.post.uid);
+            result.post.userName = user.name;
+            result.post.userPicUrl = user.thumbnailUrl;
             result.post.date = DateFormat.timeToString(result.post.creationTime);
         }
         result.userAuth = currUserAuth();
@@ -354,8 +373,10 @@ public class Application extends Controller {
 
             List<Post> posts = Posts.getLatest(offset, limit);
             for (Post post: posts) {
-                post.userName = uidToUserName(post.uid);
+                User user = uidToUser(post.uid);
+                post.userName = user.name;
                 post.date = DateFormat.timeToString(post.creationTime);
+                post.userPicUrl = user.thumbnailUrl;
             }
             AppPosts appPosts = new AppPosts(AppResult.success());
             appPosts.setPosts(posts);
@@ -460,7 +481,9 @@ public class Application extends Controller {
                 throw new AppException(AppResult.EINVAL);
             List<Comment> comments = Comments.getCommentsByPostId(postId);
             for (Comment comment: comments) {
-                comment.userName = uidToUserName(comment.uid);
+                User user = uidToUser(comment.uid);
+                comment.userName = user.name;
+                comment.userPicUrl = user.thumbnailUrl;
                 comment.date = DateFormat.timeToString(comment.creationTime);
             }
             AppComments appComments = new AppComments(AppResult.success());
@@ -479,13 +502,6 @@ public class Application extends Controller {
     public Promise<Result> comments(long postId) {
         Promise<AppComments> promise = Promise.promise(() -> commentsJob(postId));
         return promise.map(appComments -> ok(appComments.toJson()));
-    }
-
-    private String uidToUserName(long uid) {
-        User user = Users.get(uid);
-        if (user == null)
-            return null;
-        return user.name;
     }
 
     public Result robots() {
