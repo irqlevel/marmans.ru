@@ -68,6 +68,7 @@ public class Application extends Controller {
             if (user == null)
                 throw new AppException(AppResult.EDB_UPDATE);
 
+            signin(user.uid);
             AppResult result = AppResult.success();
             result.uid = user.uid;
             return result;
@@ -100,6 +101,13 @@ public class Application extends Controller {
         return promise.map(val -> ok(val.toJson()));
     }
 
+    private void signin(long uid) throws AppException {
+        UserSession session = UserSession.genSession(uid, 24*3600*1000);
+        if (!UserSessions.insert(session))
+            throw new AppException(AppResult.EDB_UPDATE);
+        session().put("usersession", session.getValue());
+    }
+
     private AppResult postSigninJob(AppUserSignin signin) {
         try {
             Logger.info("post signin job");
@@ -116,11 +124,7 @@ public class Application extends Controller {
                 throw new AppException(AppResult.EAUTH, "wrong password");
 
             signout(user.uid);
-            UserSession session = UserSession.genSession(user.uid, 24*3600*1000);
-            if (!UserSessions.insert(session))
-                throw new AppException(AppResult.EDB_UPDATE);
-
-            session().put("usersession", session.getValue());
+            signin(user.uid);
 
             Logger.info("user signed in uid=" + user.uid);
             AppResult result = AppResult.success();

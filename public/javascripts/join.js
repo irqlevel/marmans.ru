@@ -15,7 +15,7 @@ function onReady()
             if (result.resultCode) {
                 showJoinError(result.resultDesc);
             } else {
-                window.location.replace("/signin");
+                window.location.replace("/profile");
             }
         })
         .fail(function() {
