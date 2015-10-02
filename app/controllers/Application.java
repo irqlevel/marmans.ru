@@ -60,7 +60,7 @@ public class Application extends Controller {
         try {
             Logger.info("post join job");
             if (join.email == null || join.password == null)
-                throw new AppException(AppResult.EINVAL);
+                throw new AppException(AppResult.EINVAL, "invalid email or password");
 
             Logger.info("email=" + join.email);
 
@@ -104,16 +104,16 @@ public class Application extends Controller {
         try {
             Logger.info("post signin job");
             if (signin.email == null || signin.password == null)
-                throw new AppException(AppResult.EINVAL);
+                throw new AppException(AppResult.EINVAL, "invalid email or password");
 
             Logger.info("email=" + signin.email);
 
             User user = Users.getByEmail(signin.email);
             if (user == null)
-                throw new AppException(AppResult.ENOTFOUND);
+                throw new AppException(AppResult.ENOTFOUND, "user not found");
 
             if (!BCrypt.checkpw(signin.password, user.hashp))
-                throw new AppException(AppResult.EAUTH);
+                throw new AppException(AppResult.EAUTH, "wrong password");
 
             signout(user.uid);
             UserSession session = UserSession.genSession(user.uid, 24*3600*1000);

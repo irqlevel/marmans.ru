@@ -10,4 +10,9 @@ public class AppException extends Exception {
     public AppException(int resultCode) {
         this.result = AppResult.error(resultCode);
     }
+
+    public AppException(int resultCode, String resultDesc) {
+        this.result = AppResult.error(resultCode);
+        this.result.setResultDesc(resultDesc);
+    }
 }
