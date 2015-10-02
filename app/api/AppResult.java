@@ -44,6 +44,10 @@ public class AppResult {
         resultCodeToDescMap.put(EAUTH, "authorization failed");
     }
 
+    public void setResultDesc(String resultDesc) {
+        this.resultDesc = resultDesc;
+    }
+
     public void setResultCode(int resultCode) {
         this.resultCode = resultCode;
         this.resultDesc = resultCodeToDesc(resultCode);

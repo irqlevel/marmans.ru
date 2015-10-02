@@ -8,6 +8,7 @@ import lib.DateFormat;
 import models.*;
 
 import models.dba.*;
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.imgscalr.Scalr;
 import play.libs.F.*;
 import play.mvc.*;
@@ -70,6 +71,10 @@ public class Application extends Controller {
             AppResult result = AppResult.success();
             result.uid = user.uid;
             return result;
+        } catch (PersistenceException e) {
+            AppResult r = new AppResult(AppResult.EXISTS);
+            r.setResultDesc("user already exists");
+            return r;
         } catch (AppException e) {
             return e.getResult();
         } catch (Exception e) {
