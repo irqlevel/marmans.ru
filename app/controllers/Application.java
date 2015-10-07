@@ -102,7 +102,7 @@ public class Application extends Controller {
     }
 
     private void signin(long uid) throws AppException {
-        UserSession session = UserSession.genSession(uid, 24*3600*1000);
+        UserSession session = UserSession.genSession(uid, 24 * 3600 * 1000);
         if (!UserSessions.insert(session))
             throw new AppException(AppResult.EDB_UPDATE);
         session().put("usersession", session.getValue());

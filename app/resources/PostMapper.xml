@@ -4,9 +4,17 @@
 
 <mapper namespace="models.mappers.PostMapper">
     <insert id="insert" parameterType="map">
-        INSERT INTO Posts (postId, uid, title, content, creationTime, imageId)
-        VALUES(#{postId}, #{uid}, #{title}, #{content}, #{creationTime}, #{imageId});
+        INSERT INTO Posts (postId, uid, title, content, creationTime, imageId, active)
+        VALUES(#{postId}, #{uid}, #{title}, #{content}, #{creationTime}, #{imageId}, #{active});
     </insert>
+
+    <update id="setImage" parameterType="map">
+        UPDATE Posts SET imageId = #{imageId} WHERE postId = #{postId};
+    </update>
+
+    <update id="setActive" parameterType="map">
+        UPDATE Posts SET active = #{active} WHERE postId = #{postId};
+    </update>
 
     <delete id="delete" parameterType="long">
         DELETE FROM Posts WHERE postId = #{postId};
@@ -17,14 +25,14 @@
     </select>
 
     <select id="getUserAll" parameterType="long" resultType="models.Post">
-        SELECT * FROM Posts ORDER BY creationTime DESC WHERE uid = #{uid};
+        SELECT * FROM Posts WHERE active = 1 ORDER BY creationTime DESC WHERE uid = #{uid};
     </select>
 
     <select id="getLatest" parameterType="map" resultType="models.Post">
-        SELECT * FROM Posts ORDER BY creationTime DESC LIMIT #{limit} OFFSET #{offset};
+        SELECT * FROM Posts WHERE active = 1 ORDER BY creationTime DESC LIMIT #{limit} OFFSET #{offset};
     </select>
 
     <select id="getAll" resultType="models.Post">
-        SELECT * FROM Posts ORDER BY creationTime DESC;
+        SELECT * FROM Posts WHERE active = 1 ORDER BY creationTime DESC;
     </select>
 </mapper>

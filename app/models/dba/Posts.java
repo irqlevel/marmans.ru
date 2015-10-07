@@ -19,11 +19,13 @@ public class Posts {
         newPost.creationTime = System.currentTimeMillis();
         newPost.postId = 1000 + new Rng().randInt(1000000);
         newPost.uid = uid;
+        newPost.active = 0;
 
         try {
             session = Db.getSession();
             PostMapper mapper = session.getMapper(PostMapper.class);
-            mapper.insert(newPost.postId, newPost.uid, newPost.title, newPost.content, newPost.creationTime, newPost.imageId);
+            mapper.insert(newPost.postId, newPost.uid, newPost.title, newPost.content, newPost.creationTime,
+                          newPost.imageId, newPost.active);
             session.commit();
             post = newPost;
         } finally {
@@ -32,6 +34,38 @@ public class Posts {
         }
 
         return post;
+    }
+
+    public static boolean setImage(long postId, long imageId) {
+        SqlSession session = null;
+        boolean result = false;
+        try {
+            session = Db.getSession();
+            PostMapper mapper = session.getMapper(PostMapper.class);
+            mapper.setImage(postId, imageId);
+            session.commit();
+            result = true;
+        } finally {
+            if (session != null)
+                session.close();
+        }
+        return result;
+    }
+
+    public static boolean setActive(long postId, int active) {
+        SqlSession session = null;
+        boolean result = false;
+        try {
+            session = Db.getSession();
+            PostMapper mapper = session.getMapper(PostMapper.class);
+            mapper.setActive(postId, active);
+            session.commit();
+            result = true;
+        } finally {
+            if (session != null)
+                session.close();
+        }
+        return result;
     }
 
     public static List<Post> getAll() {
