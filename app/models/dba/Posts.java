@@ -20,6 +20,7 @@ public class Posts {
         newPost.postId = 1000 + new Rng().randInt(1000000);
         newPost.uid = uid;
         newPost.active = 0;
+        newPost.imageId = -1;
 
         try {
             session = Db.getSession();
@@ -108,5 +109,21 @@ public class Posts {
                 session.close();
         }
         return post;
+    }
+
+    public static boolean delete(long postId) {
+        SqlSession session = null;
+        boolean result = false;
+        try {
+            session = Db.getSession();
+            PostMapper mapper = session.getMapper(PostMapper.class);
+            mapper.delete(postId);
+            session.commit();
+            result = true;
+        } finally {
+            if (session != null)
+                session.close();
+        }
+        return result;
     }
 }

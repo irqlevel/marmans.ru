@@ -2,6 +2,11 @@
 <div class="post-title">
     <a class="post-link" href="/post/{{postId}}">{{title}}</a> <img class="user_pic" src="{{userPicUrl}}"> <a href="/profile/{{uid}}">{{userName}}</a> <span class="post-date">{{date}}</span>
 </div>
+{{#imageUrl}}
+    <div class="post-image-container">
+        <img class="post-image" src="{{imageUrl}}">
+    </div>
+{{/imageUrl}}
 <div class="post-content">
     <p class="post-content-text">{{content}}</p>
 </div>

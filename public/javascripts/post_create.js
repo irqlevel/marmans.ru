@@ -7,9 +7,34 @@ function postCreateHideError() {
     $("#post-create-error").hide();
 }
 
+function postDelete(postId) {
+    postJson("/post/" + postId + "/delete", "{}")
+                    .done(function(result) {
+                    })
+                    .fail(function() {
+                    });
+}
+
+function postActivate(postId) {
+    postJson("/post/" + postId + "/activate", "{}")
+    .done(function(result) {
+        window.location.replace("/post/" + postId);
+    })
+    .fail(function() {
+        postDelete(postId);
+        postCreateShowError("post activation failed");
+    });
+}
+
 function uploadPostImage(postId)
 {
-    file = $("#postImage").prop('files')[0];
+    var files = $("#postImage").prop('files');
+    if (files.length == 0) {
+        postActivate(postId);
+        return;
+    }
+
+    var file = files[0];
     if (!file.type.match('image.*')) {
         postCreateShowError("post image should be an image file");
         return;
@@ -32,7 +57,7 @@ function uploadPostImage(postId)
             }
             $.ajax({
                 method: "POST",
-                url: "//post/" + postId + "/setImage",
+                url: "/post/" + postId + "/uploadImage",
                 data: bytes,
                 processData: false,
                 headers: {"X-Csrf-Token": csrfToken, "X-File-Name" : file.name, "X-File-Size" : file.size,
@@ -42,19 +67,9 @@ function uploadPostImage(postId)
             }).done(function(result) {
                 if (result.resultCode) {
                     postCreateShowError(result.resultDesc);
-                    postJson("/post/" + postId + "/delete", "{}")
-                    .done(function(result) {
-                    })
-                    .fail(function() {
-                    });
+                    postDelete(postId);
                 } else {
-                    postJson("/post/" + postId + "/setActive", "{}")
-                    .done(function(result) {
-                        window.location.replace("/post/" + postId);
-                    })
-                    .fail(function() {
-                        postCreateShowError("post activation failed");
-                    });
+                    postActivate(postId);
                 }
             })
             .fail(function() {

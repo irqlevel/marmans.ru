@@ -344,6 +344,7 @@ public class Application extends Controller {
             post.userName = user.name;
             post.userPicUrl = user.thumbnailUrl;
             post.date = DateFormat.timeToString(post.creationTime);
+            post.imageUrl = getImageUrl(post.imageId);
         }
         result.posts = posts;
         result.userAuth = currUserAuth();
@@ -356,6 +357,18 @@ public class Application extends Controller {
         return promise.map(val -> ok(postsv.render(val.userAuth, val.posts)));
     }
 
+    private String getImageUrl(long imageId) {
+        try {
+            if (imageId == -1)
+                return null;
+            Image image = Images.get(imageId);
+            return image.url;
+        } catch (Throwable t) {
+            Logger.error("throwable", t);
+        }
+        return null;
+    }
+
     private PostResult postJob(long postId) {
         PostResult result = new PostResult();
         result.post = Posts.get(postId);
@@ -364,6 +377,7 @@ public class Application extends Controller {
             result.post.userName = user.name;
             result.post.userPicUrl = user.thumbnailUrl;
             result.post.date = DateFormat.timeToString(result.post.creationTime);
+            result.post.imageUrl = getImageUrl(result.post.imageId);
         }
         result.userAuth = currUserAuth();
         return result;
@@ -386,6 +400,7 @@ public class Application extends Controller {
                 post.userName = user.name;
                 post.date = DateFormat.timeToString(post.creationTime);
                 post.userPicUrl = user.thumbnailUrl;
+                post.imageUrl = getImageUrl(post.imageId);
             }
             AppPosts appPosts = new AppPosts(AppResult.success());
             appPosts.setPosts(posts);
@@ -562,6 +577,122 @@ public class Application extends Controller {
     public Promise<Result> postAvatar() {
         Logger.info("post avatar");
         Promise<AppResult> promise = Promise.promise(() -> postAvatarJob());
+        return promise.map(val -> ok(val.toJson()));
+    }
+
+    private AppResult postUploadImageJob(long postId) {
+        File file = null;
+        Image image = null;
+        try {
+            Logger.info("post " + postId + " upload image job");
+            UserAuth userAuth = postUserAuth();
+            if (userAuth == null)
+                throw new AppException(AppResult.EAUTH);
+            User user = userAuth.user;
+            Post post = Posts.get(postId);
+            if (post == null)
+                throw new AppException(AppResult.ENOTFOUND);
+            if (post.uid != user.uid)
+                throw new AppException(AppResult.ENOTFOUND);
+
+            file = request().body().asRaw().asFile();
+            String fileName = request().getHeader("X-File-Name");
+            String fileType = request().getHeader("X-File-Type");
+            Logger.info("file is " + file.getAbsolutePath() + " length=" + file.length());
+
+            BufferedImage srcImg = ImageIO.read(file);
+            if (srcImg.getWidth() > 1024) {
+                srcImg = Scalr.resize(srcImg, Scalr.Method.ULTRA_QUALITY,
+                                      Scalr.Mode.FIT_TO_WIDTH, 1024, Scalr.OP_ANTIALIAS);
+            }
+
+            ImageIO.write(srcImg, "jpg", file);
+            image = Images.create(user.uid, "post image", "post image", file, fileName, fileType);
+            Logger.info("image created url=" + image.url + " id=" + image.imageId);
+
+            if (!Posts.setImage(post.postId, image.imageId))
+                throw new AppException(AppResult.EDB_UPDATE);
+
+            return AppResult.success();
+        } catch (AppException e) {
+            return e.getResult();
+        } catch (Throwable e) {
+            Logger.error("exception", e);
+            return AppResult.error(AppResult.EEXCEPT);
+        } finally {
+            if (file != null)
+                file.delete();
+        }
+    }
+
+    public Promise<Result> postUploadImage(long postId) {
+        Logger.info("post " + postId + " upload image");
+        Promise<AppResult> promise = Promise.promise(() -> postUploadImageJob(postId));
+        return promise.map(val -> ok(val.toJson()));
+    }
+
+    private AppResult postDeleteJob(long postId) {
+        try {
+            Logger.info("post " + postId + " delete job");
+            UserAuth userAuth = postUserAuth();
+            if (userAuth == null)
+                throw new AppException(AppResult.EAUTH);
+            User user = userAuth.user;
+            Post post = Posts.get(postId);
+            if (post == null)
+                throw new AppException(AppResult.ENOTFOUND);
+            if (post.uid != user.uid)
+                throw new AppException(AppResult.ENOTFOUND);
+
+            Posts.delete(postId);
+            try {
+                Images.delete(post.imageId);
+            } catch (Throwable t) {
+                Logger.error("exception", t);
+            }
+            return AppResult.success();
+        } catch (AppException e) {
+            return e.getResult();
+        } catch (Throwable t) {
+            Logger.error("exception", t);
+            return AppResult.error(AppResult.EEXCEPT);
+        } finally {
+        }
+    }
+
+    public Promise<Result> postDelete(long postId) {
+        Logger.info("post " + postId + " delete");
+        Promise<AppResult> promise = Promise.promise(() -> postDeleteJob(postId));
+        return promise.map(val -> ok(val.toJson()));
+    }
+
+    private AppResult postActivateJob(long postId) {
+        try {
+            Logger.info("post " + postId + " delete job");
+            UserAuth userAuth = postUserAuth();
+            if (userAuth == null)
+                throw new AppException(AppResult.EAUTH);
+            User user = userAuth.user;
+            Post post = Posts.get(postId);
+            if (post == null)
+                throw new AppException(AppResult.ENOTFOUND);
+            if (post.uid != user.uid)
+                throw new AppException(AppResult.ENOTFOUND);
+
+            Posts.setActive(postId, 1);
+            return AppResult.success();
+        } catch (AppException e) {
+            return e.getResult();
+        } catch (Throwable t) {
+            Logger.error("exception", t);
+            return AppResult.error(AppResult.EEXCEPT);
+        } finally {
+        }
+    }
+
+    public Promise<Result> postActivate(long postId) {
+        Logger.info("post " + postId + " activate");
+        Promise<AppResult> promise = Promise.promise(() -> postActivateJob(postId));
         return promise.map(val -> ok(val.toJson()));
     }
 }

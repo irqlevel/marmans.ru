@@ -17,7 +17,7 @@ function loadPosts(offset, limit)
             var post = result.posts[i];
             var rendered = Mustache.render(post_template,
                             {title: post.title, content: post.content, uid: post.uid, postId : post.postId,
-                             userName : post.userName, userPicUrl : post.userPicUrl, date: post.date});
+                             userName : post.userName, imageUrl : post.imageUrl, userPicUrl : post.userPicUrl, date: post.date});
 
             $("#posts").append(rendered);
         }
