@@ -40,8 +40,8 @@ function uploadPostImage(postId)
         return;
     }
 
-    if (file.size >= (1024*1024)) {
-        postCreateShowError("post image file exceeds 1MB");
+    if (file.size >= (3*1024*1024)) {
+        postCreateShowError("post image file exceeds 3MB");
         return;
     }
 
