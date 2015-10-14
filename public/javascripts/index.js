@@ -18,8 +18,10 @@ function loadPosts(offset, limit)
             var rendered = Mustache.render(post_template,
                             {title: post.title, content: post.content, uid: post.uid, postId : post.postId,
                              userName : post.userName, imageUrl : post.imageUrl, userPicUrl : post.userPicUrl,
-                             youtubeLinkId : post.youtubeLinkId, date: post.date, nrComments: post.nrComments});
+                             youtubeLinkId : post.youtubeLinkId, date: post.date, nrComments: post.nrComments,
+                             nrViews: post.nrViews, owner: (currUserUid == post.uid)});
             $("#posts").append(rendered);
+            bindPostDelete(post.postId);
         }
         fixPostsContent();
     })

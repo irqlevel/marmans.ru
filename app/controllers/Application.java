@@ -402,6 +402,7 @@ public class Application extends Controller {
         PostResult result = new PostResult();
         result.post = Posts.get(postId);
         if (result.post != null) {
+            Posts.incViews(result.post.postId);
             User user = uidToUser(result.post.uid);
             result.post.userName = user.name;
             result.post.userPicUrl = user.thumbnailUrl;

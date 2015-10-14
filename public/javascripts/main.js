@@ -47,6 +47,19 @@ function fixPostsContent() {
     });
 }
 
+function bindPostDelete(postId)
+{
+    $("#post-delete-link-" + postId).click(function( event ) {
+        event.preventDefault();
+        postJson("/post/" + postId + "/delete", "{}")
+        .done(function(result) {
+            window.location.replace("/");
+        })
+        .fail(function() {
+        });
+    });
+}
+
 function onReady()
 {
     csrfToken = $("#csrfToken").text();

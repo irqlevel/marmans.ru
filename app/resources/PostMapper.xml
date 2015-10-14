@@ -4,8 +4,8 @@
 
 <mapper namespace="models.mappers.PostMapper">
     <insert id="insert" parameterType="map">
-        INSERT INTO Posts (postId, uid, title, content, creationTime, imageId, active, youtubeLinkId)
-        VALUES(#{postId}, #{uid}, #{title}, #{content}, #{creationTime}, #{imageId}, #{active}, #{youtubeLinkId});
+        INSERT INTO Posts (postId, uid, title, content, creationTime, imageId, active, youtubeLinkId, nrViews)
+        VALUES(#{postId}, #{uid}, #{title}, #{content}, #{creationTime}, #{imageId}, #{active}, #{youtubeLinkId}, #{nrViews});
     </insert>
 
     <update id="setImage" parameterType="map">
@@ -35,4 +35,8 @@
     <select id="getAll" resultType="models.Post">
         SELECT * FROM Posts WHERE active = 1 ORDER BY creationTime DESC;
     </select>
+
+    <update id="incViews" parameterType="long">
+        UPDATE Posts SET nrViews = nrViews + 1 WHERE postId = #{postId};
+    </update>
 </mapper>

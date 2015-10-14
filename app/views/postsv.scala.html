@@ -4,7 +4,26 @@
 @for(post <- posts) {
     <div class="post-container">
         <div class="post-title">
-            <a class="post-link" href="/post/@post.postId">@post.title</a> <img class="user_pic" src="@post.userPicUrl"> <a href="/profile/@post.uid">@post.userName</a> <span class="post-date">@post.date</span>  <span class="post-nr-comments">@post.nrComments comments</span>
+            <div class="post-title-title">
+                <a class="post-link" href="/post/@post.postId">@post.title</a>
+            </div>
+            <div class="post-title-userpic">
+                <img class="user_pic" src="@post.userPicUrl">
+            </div>
+            <div class="post-title-username">
+                <a href="/profile/@post.uid">@post.userName</a>
+            </div>
+            <div class="post-title-date">
+                <span class="post-date">@post.date</span>
+            </div>
+            <div class="post-title-nr-comments">
+                <span class="post-nr-comments">@post.nrComments comments</span>
+            </div>
+            <div class="post-title-nr-views">
+                <span class="post-nr-views">@post.nrViews views</span>
+            </div>
+        </div>
+        <div class="clear-both">
         </div>
         @if(post.imageUrl != null) {
         <div class="post-image-container">
@@ -17,9 +36,11 @@
             </iframe>
         </div>
         }
+        @if(post.content != null && post.content.length() > 0) {
         <div class="post-content">
             <p class="post-content-text">@post.content</p>
         </div>
+        }
     </div>
     <hr>
 }

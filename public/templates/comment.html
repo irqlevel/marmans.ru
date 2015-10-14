@@ -1,6 +1,17 @@
 <div class="comment-container" id="comment-container-{{commentId}}">
     <div class="comment-content">
-        <div class="comment-author"><img class="user_pic" src="{{userPicUrl}}"><a href="/profile/{{uid}}">{{userName}}</a> <span class="comment-date">{{date}}</span></div>
+        <div class="comment-author">
+            <div class="comment-author-userpic">
+                <img class="user_pic" src="{{userPicUrl}}">
+            </div>
+            <div class="comment-author-username">
+                <a href="/profile/{{uid}}">{{userName}}</a>
+            </div>
+            <div class="comment-author-date">
+                <span class="comment-date">{{date}}</span>
+            </div>
+        </div>
+        <div class="clear-both"></div>
         <p class="comment-content-text" id="comment-content-text-{{commentId}}">{{content}}</p>
         <a href="/comment/{{commentId}}/reply" class="comment-reply-link" id="comment-reply-link-{{commentId}}">reply</a>
     </div>

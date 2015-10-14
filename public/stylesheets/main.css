@@ -105,3 +105,73 @@ body {
 .user_pic {
     width: 64px;
 }
+
+.post-title-title {
+    float: left;
+    margin-right: 20px;
+}
+
+.post-title-userpic {
+    float: left;
+    margin-right: 5px;
+}
+
+.post-title-username {
+    float: left;
+    margin-right: 5px;
+}
+
+.post-title-date {
+    float: left;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.post-title-nr-comments {
+    float: left;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.post-title-nr-views {
+    float: left;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.post-title-delete-link {
+    float: left;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.clear-both {
+    clear: both;
+}
+
+.post-image-container {
+    margin: 10px;
+}
+
+.post-youtube-container {
+    margin: 10px;
+}
+
+.post-content {
+    margin: 10px;
+}
+
+.comment-author-userpic {
+    float: left;
+    margin-right: 5px;
+}
+
+.comment-author-username {
+    float: left;
+    margin-right: 5px;
+}
+
+.comment-author-date {
+    float: left;
+    margin-right: 5px;
+}

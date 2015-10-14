@@ -22,12 +22,13 @@ public class Posts {
         newPost.active = 0;
         newPost.imageId = -1;
         newPost.youtubeLinkId = youtubeLinkId;
+        newPost.nrViews = 0;
 
         try {
             session = Db.getSession();
             PostMapper mapper = session.getMapper(PostMapper.class);
             mapper.insert(newPost.postId, newPost.uid, newPost.title, newPost.content, newPost.creationTime,
-                          newPost.imageId, newPost.active, newPost.youtubeLinkId);
+                          newPost.imageId, newPost.active, newPost.youtubeLinkId, newPost.nrViews);
             session.commit();
             post = newPost;
         } finally {
@@ -119,6 +120,22 @@ public class Posts {
             session = Db.getSession();
             PostMapper mapper = session.getMapper(PostMapper.class);
             mapper.delete(postId);
+            session.commit();
+            result = true;
+        } finally {
+            if (session != null)
+                session.close();
+        }
+        return result;
+    }
+
+    public static boolean incViews(long postId) {
+        SqlSession session = null;
+        boolean result = false;
+        try {
+            session = Db.getSession();
+            PostMapper mapper = session.getMapper(PostMapper.class);
+            mapper.incViews(postId);
             session.commit();
             result = true;
         } finally {

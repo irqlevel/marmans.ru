@@ -1,6 +1,30 @@
 <div class="post-container">
 <div class="post-title">
-    <a class="post-link" href="/post/{{postId}}">{{title}}</a> <img class="user_pic" src="{{userPicUrl}}"> <a href="/profile/{{uid}}">{{userName}}</a> <span class="post-date">{{date}}</span>  <span class="post-nr-comments">{{nrComments}} comments</span>
+    <div class="post-title-title">
+        <a class="post-link" href="/post/{{postId}}">{{title}}</a>
+    </div>
+    <div class="post-title-userpic">
+        <img class="user_pic" src="{{userPicUrl}}">
+    </div>
+    <div class="post-title-username">
+        <a href="/profile/{{uid}}">{{userName}}</a>
+    </div>
+    <div class="post-title-date">
+        <span class="post-date">{{date}}</span>
+    </div>
+    <div class="post-title-nr-comments">
+        <span class="post-nr-comments">{{nrComments}} comments</span>
+    </div>
+    <div class="post-title-nr-views">
+        <span class="post-nr-views">{{nrViews}} views</span>
+    </div>
+    {{#owner}}
+    <div class="post-title-delete-link">
+        <a class="btn btn-default" id="post-delete-link-{{postId}}" href="/post/{{postId}}/delete">Delete</a>
+    </div>
+    {{/owner}}
+</div>
+<div class="clear-both">
 </div>
 {{#imageUrl}}
     <div class="post-image-container">
@@ -13,8 +37,10 @@
     </iframe>
 </div>
 {{/youtubeLinkId}}
+{{#content}}
 <div class="post-content">
     <p class="post-content-text">{{content}}</p>
 </div>
+{{/content}}
 </div>
 <hr>

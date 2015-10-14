@@ -177,6 +177,7 @@ function onReady()
         reply_comment_template = template;
     });
     var postId = $("#post-id").text();
+    bindPostDelete(postId);
     loadPostComments(postId, -1);
     bindPostComment(postId);
     fixCommentsContent();
