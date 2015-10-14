@@ -12,4 +12,6 @@ public interface CommentMapper {
     public Comment get(Long commentId);
     public List<Comment> getByPostId(Long postId);
     public void delete(Long commentId);
+
+    public long countComments(Long postId);
 }

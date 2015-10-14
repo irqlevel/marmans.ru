@@ -373,6 +373,7 @@ public class Application extends Controller {
             post.userPicUrl = user.thumbnailUrl;
             post.date = DateFormat.timeToString(post.creationTime);
             post.imageUrl = getImageUrl(post.imageId);
+            post.nrComments = Comments.countComments(post.postId);
         }
         result.posts = posts;
         result.userAuth = currUserAuth();
@@ -406,6 +407,7 @@ public class Application extends Controller {
             result.post.userPicUrl = user.thumbnailUrl;
             result.post.date = DateFormat.timeToString(result.post.creationTime);
             result.post.imageUrl = getImageUrl(result.post.imageId);
+            result.post.nrComments = Comments.countComments(result.post.postId);
         }
         result.userAuth = currUserAuth();
         return result;
@@ -429,6 +431,7 @@ public class Application extends Controller {
                 post.date = DateFormat.timeToString(post.creationTime);
                 post.userPicUrl = user.thumbnailUrl;
                 post.imageUrl = getImageUrl(post.imageId);
+                post.nrComments = Comments.countComments(post.postId);
             }
             AppPosts appPosts = new AppPosts(AppResult.success());
             appPosts.setPosts(posts);

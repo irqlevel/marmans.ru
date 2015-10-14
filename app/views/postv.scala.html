@@ -3,7 +3,7 @@
 @content = {
 <div class="post-container">
     <div class="post-title">
-        <p><strong>@post.title</strong> <img class="user_pic" src="@post.userPicUrl"> <a href="/profile/@post.uid">@post.userName</a> <span class="post-date">@post.date</span></p>
+        <p><strong>@post.title</strong> <img class="user_pic" src="@post.userPicUrl"> <a href="/profile/@post.uid">@post.userName</a> <span class="post-date">@post.date</span>  <span class="post-nr-comments">@post.nrComments comments</span></p>
     </div>
     @if(post.imageUrl != null) {
     <div class="post-image-container">

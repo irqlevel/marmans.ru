@@ -62,4 +62,18 @@ public class Comments {
 
         return comment;
     }
+
+    public static long countComments(long postId) {
+        SqlSession session = null;
+        long nrComments = 0;
+        try {
+            session = Db.getSession();
+            CommentMapper mapper = session.getMapper(CommentMapper.class);
+            nrComments = mapper.countComments(postId);
+        } finally {
+            if (session != null)
+                session.close();
+        }
+        return nrComments;
+    }
 }

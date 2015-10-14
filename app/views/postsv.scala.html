@@ -4,7 +4,7 @@
 @for(post <- posts) {
     <div class="post-container">
         <div class="post-title">
-            <a class="post-link" href="/post/@post.postId">@post.title</a> <img class="user_pic" src="@post.userPicUrl"> <a href="/profile/@post.uid">@post.userName</a> <span class="post-date">@post.date</span>
+            <a class="post-link" href="/post/@post.postId">@post.title</a> <img class="user_pic" src="@post.userPicUrl"> <a href="/profile/@post.uid">@post.userName</a> <span class="post-date">@post.date</span>  <span class="post-nr-comments">@post.nrComments comments</span>
         </div>
         @if(post.imageUrl != null) {
         <div class="post-image-container">
