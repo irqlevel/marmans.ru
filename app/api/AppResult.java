@@ -29,6 +29,7 @@ public class AppResult {
     public static final int EAUTH = 12;
     public static final int EUNSUPFMT = 13;
     public static final int EFILETOBIG = 14;
+    public static final int EBADLINK = 14;
 
     static {
         resultCodeToDescMap.put(ESUCCESS, "success");
@@ -46,6 +47,7 @@ public class AppResult {
         resultCodeToDescMap.put(EAUTH, "authorization failed");
         resultCodeToDescMap.put(EUNSUPFMT, "unsupported format");
         resultCodeToDescMap.put(EFILETOBIG, "file is too big");
+        resultCodeToDescMap.put(EBADLINK, "bad link specified");
     }
 
     public void setResultDesc(String resultDesc) {

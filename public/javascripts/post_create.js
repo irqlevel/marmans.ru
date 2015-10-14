@@ -88,7 +88,7 @@ function onReady()
     $("#post-create-form" ).submit(function( event ) {
         event.preventDefault();
         postCreateHideError();
-        postJson("/post/create", JSON.stringify({ "title": $('#inputTitle').val(), "content" : $('#inputContent').val()}))
+        postJson("/post/create", JSON.stringify({ "title": $('#inputTitle').val(), "youtubeVideoLink" : $('#youtubeVideoLink').val(), "content" : $('#inputContent').val()}))
         .done(function(result) {
             if (result.resultCode) {
                 postCreateShowError(result.resultDesc);

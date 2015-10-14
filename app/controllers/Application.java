@@ -20,6 +20,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Application extends Controller {
     public Promise<Result> index() {
@@ -280,20 +282,45 @@ public class Application extends Controller {
                 ok(postcreatev.render(userAuth)));
     }
 
+    private static String extractYTId(String ytUrl) {
+        String vId = null;
+        Pattern pattern = Pattern.compile(
+                "^(http|https):\\/\\/www\\.youtube\\.com\\/(watch\\?v=|embed\\/)([^#&?]*).*$",
+                Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(ytUrl);
+        if (matcher.matches()) {
+            vId = matcher.group(3);
+            if (vId.length() != 11)
+                vId = null;
+        }
+        return vId;
+    }
+
     private AppResult postCreateJob(AppPostCreate postCreate) {
         try {
             Logger.info("post create job");
             Logger.info("title=" + postCreate.title + " content=" + postCreate.content);
 
-            if (postCreate.title == null || postCreate.content == null)
+            if (postCreate.title == null || postCreate.content == null || postCreate.youtubeVideoLink == null)
                 throw new AppException(AppResult.EINVAL);
 
+            if (postCreate.title.length() == 0)
+                throw new AppException(AppResult.EINVAL);
+
+            Logger.info("post create title=" + postCreate.title + " youtubeVideoLink=" + postCreate.youtubeVideoLink);
             UserAuth userAuth = postUserAuth();
             if (userAuth == null)
                 throw new AppException(AppResult.EAUTH);
 
+            String youtubeLinkId = null;
+            if (postCreate.youtubeVideoLink.length() > 0) {
+                youtubeLinkId = extractYTId(postCreate.youtubeVideoLink);
+                Logger.info("youtubeLinkId=" + youtubeLinkId);
+                if (youtubeLinkId == null)
+                    throw new AppException(AppResult.EBADLINK);
+            }
             postCreate.title = Character.toUpperCase(postCreate.title.charAt(0)) + postCreate.title.substring(1);
-            Post post = Posts.create(userAuth.user.uid, postCreate.title, postCreate.content);
+            Post post = Posts.create(userAuth.user.uid, postCreate.title, postCreate.content, youtubeLinkId);
             if (post == null)
                 throw new AppException(AppResult.EDB_UPDATE);
             AppResult result = AppResult.success();
@@ -633,7 +660,7 @@ public class Application extends Controller {
                 if (srcImg.getWidth() > maxImgWidth)
                     throw new AppException(AppResult.EFILETOBIG);
             }
-            
+
             image = Images.create(user.uid, "post image", "post image", file, fileName, fileType);
             Logger.info("image created url=" + image.url + " id=" + image.imageId);
 
@@ -695,7 +722,7 @@ public class Application extends Controller {
 
     private AppResult postActivateJob(long postId) {
         try {
-            Logger.info("post " + postId + " delete job");
+            Logger.info("post " + postId + " activate job");
             UserAuth userAuth = postUserAuth();
             if (userAuth == null)
                 throw new AppException(AppResult.EAUTH);

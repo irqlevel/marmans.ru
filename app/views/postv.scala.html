@@ -10,6 +10,12 @@
         <img class="post-image" src="@post.imageUrl">
     </div>
     }
+    @if(post.youtubeLinkId != null) {
+    <div class="post-youtube-container">
+        <iframe width="400" height="300" src="http://www.youtube.com/embed/@post.youtubeLinkId?autoplay=0">
+        </iframe>
+    </div>
+    }
     <div class="post-content">
         <p class="post-content-text">@post.content</p>
     </div>

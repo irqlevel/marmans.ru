@@ -7,6 +7,12 @@
         <img class="post-image" src="{{imageUrl}}">
     </div>
 {{/imageUrl}}
+{{#youtubeLinkId}}
+<div class="post-youtube-container">
+    <iframe width="400" height="300" src="http://www.youtube.com/embed/{{youtubeLinkId}}?autoplay=0">
+    </iframe>
+</div>
+{{/youtubeLinkId}}
 <div class="post-content">
     <p class="post-content-text">{{content}}</p>
 </div>

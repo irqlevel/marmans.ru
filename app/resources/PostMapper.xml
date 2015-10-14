@@ -4,8 +4,8 @@
 
 <mapper namespace="models.mappers.PostMapper">
     <insert id="insert" parameterType="map">
-        INSERT INTO Posts (postId, uid, title, content, creationTime, imageId, active)
-        VALUES(#{postId}, #{uid}, #{title}, #{content}, #{creationTime}, #{imageId}, #{active});
+        INSERT INTO Posts (postId, uid, title, content, creationTime, imageId, active, youtubeLinkId)
+        VALUES(#{postId}, #{uid}, #{title}, #{content}, #{creationTime}, #{imageId}, #{active}, #{youtubeLinkId});
     </insert>
 
     <update id="setImage" parameterType="map">

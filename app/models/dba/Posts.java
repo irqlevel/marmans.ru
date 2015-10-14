@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Posts {
 
-    public static Post create(long uid, String title, String content) {
+    public static Post create(long uid, String title, String content, String youtubeLinkId) {
         SqlSession session = null;
 
         Post newPost = new Post(), post = null;
@@ -21,12 +21,13 @@ public class Posts {
         newPost.uid = uid;
         newPost.active = 0;
         newPost.imageId = -1;
+        newPost.youtubeLinkId = youtubeLinkId;
 
         try {
             session = Db.getSession();
             PostMapper mapper = session.getMapper(PostMapper.class);
             mapper.insert(newPost.postId, newPost.uid, newPost.title, newPost.content, newPost.creationTime,
-                          newPost.imageId, newPost.active);
+                          newPost.imageId, newPost.active, newPost.youtubeLinkId);
             session.commit();
             post = newPost;
         } finally {

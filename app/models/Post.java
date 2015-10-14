@@ -15,6 +15,7 @@ public class Post {
     public String imageUrl = null;
     public String userPicUrl = null;
     public int active = 0;
+    public String youtubeLinkId = null;
 
     public ObjectNode toJson() {
         ObjectNode json = Json.newObject();
@@ -29,6 +30,7 @@ public class Post {
         json.put("imageUrl", imageUrl);
         json.put("userPicUrl", userPicUrl);
         json.put("active", active);
+        json.put("youtubeLinkId", youtubeLinkId);
         return json;
     }
 }
