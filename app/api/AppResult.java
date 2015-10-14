@@ -27,6 +27,8 @@ public class AppResult {
     public static final int EDB_QUERY = 10;
     public static final int EEXCEPT = 11;
     public static final int EAUTH = 12;
+    public static final int EUNSUPFMT = 13;
+    public static final int EFILETOBIG = 14;
 
     static {
         resultCodeToDescMap.put(ESUCCESS, "success");
@@ -42,6 +44,8 @@ public class AppResult {
         resultCodeToDescMap.put(EDB_QUERY, "database query failed");
         resultCodeToDescMap.put(EEXCEPT, "unhandled exception");
         resultCodeToDescMap.put(EAUTH, "authorization failed");
+        resultCodeToDescMap.put(EUNSUPFMT, "unsupported format");
+        resultCodeToDescMap.put(EFILETOBIG, "file is too big");
     }
 
     public void setResultDesc(String resultDesc) {

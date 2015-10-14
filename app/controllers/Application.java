@@ -13,6 +13,7 @@ import org.imgscalr.Scalr;
 import play.libs.F.*;
 import play.mvc.*;
 import play.Logger;
+import scala.App;
 import views.html.*;
 
 import javax.imageio.ImageIO;
@@ -580,9 +581,26 @@ public class Application extends Controller {
         return promise.map(val -> ok(val.toJson()));
     }
 
+    private boolean isImageFileTypeSupported(String fileType) {
+        if (fileType.equals("image/png") || fileType.equals("image/gif") || fileType.equals("image/jpeg"))
+            return true;
+        return false;
+    }
+
+    private String fileTypeToImgFormat(String fileType) {
+        if (fileType.equals("image/png"))
+            return "png";
+        if (fileType.equals("image/gif"))
+            return "gif";
+        if (fileType.equals("image/jpeg"))
+            return "jpg";
+        return null;
+    }
+
     private AppResult postUploadImageJob(long postId) {
         File file = null;
         Image image = null;
+        final int maxImgWidth = 1024;
         try {
             Logger.info("post " + postId + " upload image job");
             UserAuth userAuth = postUserAuth();
@@ -598,15 +616,24 @@ public class Application extends Controller {
             file = request().body().asRaw().asFile();
             String fileName = request().getHeader("X-File-Name");
             String fileType = request().getHeader("X-File-Type");
-            Logger.info("file is " + file.getAbsolutePath() + " length=" + file.length());
+            if (fileName == null || fileType == null)
+                throw new AppException(AppResult.EINVAL);
+            Logger.info("file is " + file.getAbsolutePath() + " length=" + file.length() + " fileType=" + fileType);
+            if (!isImageFileTypeSupported(fileType))
+                throw new AppException(AppResult.EUNSUPFMT);
 
             BufferedImage srcImg = ImageIO.read(file);
-            if (srcImg.getWidth() > 1024) {
-                srcImg = Scalr.resize(srcImg, Scalr.Method.ULTRA_QUALITY,
-                                      Scalr.Mode.FIT_TO_WIDTH, 1024, Scalr.OP_ANTIALIAS);
+            if (!fileType.equals("image/gif")) {
+                if (srcImg.getWidth() > maxImgWidth) {
+                    srcImg = Scalr.resize(srcImg, Scalr.Method.ULTRA_QUALITY,
+                            Scalr.Mode.FIT_TO_WIDTH, maxImgWidth, Scalr.OP_ANTIALIAS);
+                }
+                ImageIO.write(srcImg, fileTypeToImgFormat(fileType), file);
+            } else {
+                if (srcImg.getWidth() > maxImgWidth)
+                    throw new AppException(AppResult.EFILETOBIG);
             }
-
-            ImageIO.write(srcImg, "jpg", file);
+            
             image = Images.create(user.uid, "post image", "post image", file, fileName, fileType);
             Logger.info("image created url=" + image.url + " id=" + image.imageId);
 

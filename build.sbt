@@ -17,7 +17,8 @@ libraryDependencies ++= Seq(
   "com.amazonaws" % "aws-java-sdk-s3" % "1.10.17",
   "com.amazonaws" % "aws-java-sdk-core" % "1.10.17",
   "commons-io" % "commons-io" % "2.4",
-  "org.imgscalr" % "imgscalr-lib" % "4.2"
+  "org.imgscalr" % "imgscalr-lib" % "4.2",
+  "net.sf.jmimemagic" % "jmimemagic" % "0.1.4"
 )
 
 // Add app folder as resource directory so that mapper xml files are in the classpath
