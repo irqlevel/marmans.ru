@@ -18,8 +18,8 @@ public class Db {
     private static volatile SqlSessionFactory factory = null;
     private static final String dbHost = "127.0.0.1";
     private static final int dbPort = 5432;
-    private static final String dbName = "test_database";
-    private static final String dbUser = "test_user";
+    private static final String dbName = "dbname";
+    private static final String dbUser = "super";
     private static final String dbUserPassword = "1q2w3e";
 
     private static SqlSessionFactory buildFactory(String dbHost, int dbPort, String dbName,

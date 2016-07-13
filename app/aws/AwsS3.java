@@ -12,10 +12,10 @@ import java.util.Date;
 
 public class AwsS3 {
     private AmazonS3Client client = null;
-    private static String accessKeyId = "AKIAIO244G3G3GH7GL5Q";
-    private static String secretKey = "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";
+    private static String accessKeyId = "AKIAJEERGXVG42FC6RBQ";
+    private static String secretKey = "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";
     private static String endPoint = "https://s3.eu-central-1.amazonaws.com";
-    public static final String imagesBucketName = "marmans.ru.images";
+    public static final String imagesBucketName = "ru.marmans.images";
 
     public AwsS3() {
         client = new AmazonS3Client(new AWSCredentials() {
