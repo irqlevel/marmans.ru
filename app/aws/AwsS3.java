@@ -12,8 +12,8 @@ import java.util.Date;
 
 public class AwsS3 {
     private AmazonS3Client client = null;
-    private static String accessKeyId = "AKIAJEERGXVG42FC6RBQ";
-    private static String secretKey = "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";
+    private static String accessKeyId = "";
+    private static String secretKey = "";
     private static String endPoint = "https://s3.eu-central-1.amazonaws.com";
     public static final String imagesBucketName = "ru.marmans.images";
 
